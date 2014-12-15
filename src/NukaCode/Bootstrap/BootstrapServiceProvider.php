@@ -76,29 +76,26 @@ class BootstrapServiceProvider extends ServiceProvider {
 	 */
 	protected function registerAliases()
 	{
-		$this->app->bind(
-			'NukaCode\Core\Support\Facades\Html\HTML',
-			'NukaCode\Bootstrap\Support\Facades\Html\HTML'
-		);
-		//$aliases = [
-		//	// Facades
-		//	'HTML'  => 'NukaCode\Bootstrap\Support\Facades\Html\HTML',
-		//	'bForm' => 'NukaCode\Bootstrap\Support\Facades\Html\bForm',
-		//];
-		//
-		//$appAliases = Config::get('core::nonCoreAliases');
-		//$loader     = AliasLoader::getInstance();
-		//
-		//foreach ($aliases as $alias => $class) {
-		//	if (! is_null($appAliases)) {
-		//		if (! in_array($alias, $appAliases)) {
-		//			$loader->alias($alias, $class);
-		//		}
-		//	} else {
-		//		$loader->alias($alias, $class);
-		//	}
-		//}
+		$aliases = [
+			// Facades
+			'HTML'   => 'NukaCode\Bootstrap\Support\Facades\Html\HTML',
+			'bForm'  => 'NukaCode\Bootstrap\Support\Facades\Html\bForm',
+			'BBCode' => 'NukaCode\Bootstrap\Support\Facades\Html\BBCode',
 
+		];
+
+		$appAliases = Config::get('core::nonCoreAliases');
+		$loader     = AliasLoader::getInstance();
+
+		foreach ($aliases as $alias => $class) {
+			if (! is_null($appAliases)) {
+				if (! in_array($alias, $appAliases)) {
+					$loader->alias($alias, $class);
+				}
+			} else {
+				$loader->alias($alias, $class);
+			}
+		}
 
 	}
 

@@ -1,11 +1,11 @@
 <!doctype html>
 <html>
 <head>
-	@include('partials.header')
+	@include('layouts.partials.header')
 </head>
 <body class="app">
 	<div id="container">
-		@include('partials.menu')
+		@include('layouts.partials.menu')
 		<hr />
 		<div id="content">
 		    @if (isset($content))
@@ -15,10 +15,11 @@
             @endif
 		</div>
 	</div>
+	{{ ppd(get_class(HTML)) }}
 
-	@include('partials.modals')
+	@include('layouts.partials.modals')
 
-	@include('partials.javascript')
+	@include('layouts.partials.javascript')
 
 </body>
 </html>
