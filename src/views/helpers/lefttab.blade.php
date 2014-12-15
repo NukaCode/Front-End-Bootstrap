@@ -13,15 +13,15 @@
 					<div class="panel-heading" onClick="collapse('{{ $panel->id }}');">{{ $panel->title }}</div>
 					<ul class="list-group" id="{{ $panel->id }}" style="{{ !Session::get('COLLAPSE_'. $panel->id) ? 'display: none;' : null }}">
 				@endif
-					@foreach ($panel->tabs as $tab)
-						<li class="list-group-item">
-							@if (isset($tab->options['badge']))
-								<span class="badge">{{ $tab->options['badge'] }}</span>
-							@endif
-							<a href="javascript: void(0);" class="ajaxLink" id="{{ $tab->id }}" data-location="{{ $tab->path }}">{{ ucwords($tab->title) }}</a>
-						</li>
-					@endforeach
-				</ul>
+                @foreach ($panel->tabs as $tab)
+                    <a href="javascript: void(0);" class="list-group-item ajaxLink" id="{{ $tab->id }}" data-location="{{ $tab->path }}">
+                        {{ ucwords($tab->title) }}
+                        @if (isset($tab->options['badge']))
+                            <span class="badge">{{ $tab->options['badge'] }}</span>
+                        @endif
+                    </a>
+                @endforeach
+				<ul>
 			</div>
 		@endforeach
 	</div>
@@ -38,18 +38,18 @@
 		var parts = url.split('#');
 
 		if (parts[1] != null) {
-			$('#'+ parts[1]).parent().addClass('active');
+			$('#'+ parts[1]).addClass('active');
 			$('#ajaxContent').html('{{ $settings->loadingIcon }}');
 			$('#ajaxContent').load($('#'+ parts[1]).attr('data-location'));
 		} else {
-			$('#{{ $settings->defaultTab }}').parent().addClass('active');
+			$('#{{ $settings->defaultTab }}').addClass('active');
 			$('#ajaxContent').html('{{ $settings->loadingIcon }}');
 			$('#ajaxContent').load($('#{{ $settings->defaultTab }}').attr('data-location'));
 		}
 		$('.ajaxLink').click(function() {
 
-			$('.ajaxLink').parent().removeClass('active');
-			$(this).parent().addClass('active');
+			$('.ajaxLink').removeClass('active');
+			$(this).addClass('active');
 
 			var link = $(this).attr('id');
 			$('#ajaxContent').html('{{ $settings->loadingIcon }}');

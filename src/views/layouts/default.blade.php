@@ -15,7 +15,6 @@
             @endif
 		</div>
 	</div>
-	{{ ppd(get_class(HTML)) }}
 
 	@include('layouts.partials.modals')
 
