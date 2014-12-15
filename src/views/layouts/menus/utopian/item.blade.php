@@ -3,7 +3,7 @@
         {{ HTML::link($item->option('link'), $item->option('title'), array_except($item->getOptions(), ['title', 'link', 'prefix', 'key'])) }}
         <ul>
             @foreach ($item->getItems() as $childItem)
-                @include('layouts.menus.utopian.item', ['item' => $childItem])
+                @include('item', ['item' => $childItem])
             @endforeach
         </ul>
     </li>

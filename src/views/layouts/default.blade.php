@@ -1,11 +1,11 @@
 <!doctype html>
 <html>
 <head>
-	@include('layouts.partials.header')
+	@include('partials.header')
 </head>
 <body class="app">
 	<div id="container">
-		@include('layouts.partials.menu')
+		@include('partials.menu')
 		<hr />
 		<div id="content">
 		    @if (isset($content))
@@ -16,9 +16,9 @@
 		</div>
 	</div>
 
-	@include('layouts.partials.modals')
+	@include('partials.modals')
 
-	@include('layouts.partials.javascript')
+	@include('partials.javascript')
 
 </body>
 </html>

@@ -1,0 +1,33 @@
+{
+    "name":        "nukacode/core",
+    "description": "A core set of features for laravel sites.",
+    "license":     "MIT",
+    "authors":     [
+        {
+            "name":  "Stygian",
+            "email": "stygian.warlock.v2@gmail.com"
+        },
+        {
+            "name":  "Riddles",
+            "email": "riddles@dev-toolbox.com"
+        }
+    ],
+    "require": {
+    },
+    "autoload":    {
+        "classmap": [
+            "src/views"
+        ],
+        "psr-4":    {
+            "NukaCode\\Bootstrap\\": "src/NukaCode/Bootstrap"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "php artisan nuka:core-version"
+        ],
+        "post-update-cmd": [
+            "php artisan nuka:core-version"
+        ]
+    }
+}

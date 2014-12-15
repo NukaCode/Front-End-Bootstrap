@@ -3,13 +3,13 @@
 		<ul class="nav navbar-nav">
 			@foreach ($menuItems->getItems() as $item)
 				@if ($item->option('key') != 'right')
-					@include('layouts.menus.twitter.item')
+					@include('twitter.item')
 				@endif
 			@endforeach
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 		@foreach($menuItems->item('right')->getItems() as $item)
-			@include('layouts.menus.twitter.item')
+			@include('twitter.item')
 		@endforeach
 		</ul>
 	</nav>
