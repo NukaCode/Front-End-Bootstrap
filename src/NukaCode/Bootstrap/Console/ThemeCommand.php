@@ -55,8 +55,10 @@ class ThemeCommand extends Command {
     {
         $this->comment('Creating your theme...');
 
-        $theme    = $this->config->get('core::theme.theme.style');
-        $location = $this->config->get('core::theme.theme.src');
+        $theme    = $this->config->get('bootstrap::theme.style');
+        $location = $this->config->get('bootstrap::theme.src');
+
+		ppd($theme);
 
         $commands = $this->theme->generateTheme($theme, $location);
         $this->ssh->runCommands($commands);

@@ -2,4 +2,5 @@
     <div id="header">
         {{ $menuItems }}
     </div>
+    <hr />
 @endif

@@ -1,6 +1,6 @@
 {
-    "name":        "nukacode/core",
-    "description": "A core set of features for laravel sites.",
+    "name":        "nukacode/bootstrap",
+    "description": "Helpers and views for a basic bootstrap setup.",
     "license":     "MIT",
     "authors":     [
         {
@@ -13,6 +13,7 @@
         }
     ],
     "require": {
+        "nukacode/core": "~2.0"
     },
     "autoload":    {
         "classmap": [
@@ -24,10 +25,10 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "php artisan nuka:core-version"
+            "php artisan nuka:version"
         ],
         "post-update-cmd": [
-            "php artisan nuka:core-version"
+            "php artisan nuka:version"
         ]
     }
 }

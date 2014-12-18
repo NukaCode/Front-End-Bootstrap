@@ -1,12 +1,12 @@
 .imports (@siteStyle) when (@siteStyle = dark) {
-    @import (less) "../../../../../public/vendor/darkstrap3/darkstrap.css";
+    @import (less) "../../../../../vendor/bower_components/darkstrap3/darkstrap.css";
 }
 
 
 // Cross-browser compatibility
 @import "prefixer.less";
 
-@import "../../../../../public/vendor/bootstrap3/less/bootstrap";
+@import "../../../../../vendor/bower_components/bootstrap3/less/bootstrap";
 
 // Site style based importing
 .imports(@siteStyle);
@@ -15,5 +15,5 @@
 @import "master_mixins";
 
 // Fuel UX wizard mixins
-@import "../../../../../public/vendor/fuelux/dist/less/variables";
-@import "../../../../../public/vendor/fuelux/dist/less/wizard";
+@import "../../../../../vendor/bower_components/fuelux/dist/less/variables";
+@import "../../../../../vendor/bower_components/fuelux/dist/less/wizard";

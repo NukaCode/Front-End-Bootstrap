@@ -311,6 +311,16 @@ EOT;
 
 	protected function setSelect2Requirements($id, $placeholder, $multiple)
 	{
+		static $exists = false;
+
+		if (! $exists) {
+			$this->addToSection('css', $this->html->style('css/vendor/select2/select2.css'));
+			$this->addToSection('css', $this->html->style('css/vendor/select2/select2-bootstrap.css'));
+			$this->addToSection('jsInclude', $this->html->script('vendor/select2/select2.js'));
+
+			$exists = true;
+		}
+
 		if ($multiple) {
 			$script = <<<EOT
 @parent

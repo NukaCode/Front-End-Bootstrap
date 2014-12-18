@@ -42,6 +42,7 @@ class BootstrapServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->shareWithApp();
+		$this->loadConfig();
 		$this->registerViews();
 		$this->registerAliases();
 		$this->registerArtisanCommands();
@@ -57,6 +58,16 @@ class BootstrapServiceProvider extends ServiceProvider {
 		$this->app['bootstrap'] = $this->app->share(function ($app) {
 			return true;
 		});
+	}
+
+	/**
+	 * Load the config for the package
+	 *
+	 * @return void
+	 */
+	protected function loadConfig()
+	{
+		//$this->app['config']->package('nukacode/bootstrap', __DIR__ . '/../../config');
 	}
 
 	/**
@@ -115,7 +126,7 @@ class BootstrapServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return [];
+		return ['bootstrap'];
 	}
 
 }

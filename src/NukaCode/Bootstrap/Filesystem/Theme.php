@@ -15,7 +15,7 @@ class Theme {
     {
         $this->cssDirectory        = public_path('css/');
         $this->localLessDirectory  = base_path('resources/assets/less');
-        $this->vendorLessDirectory = base_path('vendor/nukacode/core/assets/less');
+        $this->vendorLessDirectory = base_path('vendor/nukacode/bootstrap/assets/less');
     }
 
     public function generateTheme($theme, $location)
