@@ -4,6 +4,11 @@ use Illuminate\Html\HtmlBuilder as BaseHtmlBuilder;
 
 class HtmlBuilder extends BaseHtmlBuilder {
 
+	public function get()
+	{
+		return $this;
+	}
+
 	/**
 	 * Create a link including an image
 	 *

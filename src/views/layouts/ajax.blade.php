@@ -16,6 +16,17 @@
 @show
 
 <script>
+    $('.ajaxLink').on('click', function() {
+
+        $('.ajaxLink').parent().removeClass('active');
+        $(this).parent().addClass('active');
+
+        var link = $(this).attr('data-location');
+
+        $('#ajaxContent').html('<i class="fa fa-spinner fa-spin"></i>');
+        $('#ajaxContent').load(link);
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
     $(document).ready(function() {
         bootbox.setDefaults({backdrop: false});
 

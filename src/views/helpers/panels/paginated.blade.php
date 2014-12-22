@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-inverse">
     <div class="{{ $classes['heading'] or 'panel-heading' }}">{{ $header }}</div>
     <table class="{{ $classes['table'] or 'table table-hover table-condensed table-striped' }}">
         @if (isset($thead) && count($thead) > 0)
@@ -21,7 +21,7 @@
             @endforeach
         </tbody>
     </table>
-    @if ($data->getTotal() > $data->getPerPage())
+    @if ($data->total() > $data->perPage())
         <div class="{{ $classes['footer'] or 'panel-footer' }}">
             {{ $data->links() }}
         </div>

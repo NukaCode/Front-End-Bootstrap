@@ -9,30 +9,6 @@
 @show
 
 <script>
-    var url   = location.href;
-    var parts = url.split('#');
-
-    if (parts[1] != null) {
-        $('#'+ parts[1]).parent().addClass('active');
-        $('#ajaxContent').html('<i class="fa fa-spinner fa-spin"></i>');
-        $('#ajaxContent').load($('#'+ parts[1]).attr('data-location'));
-    } else {
-        $('#dashboard').parent().addClass('active');
-        $('#ajaxContent').html('<i class="fa fa-spinner fa-spin"></i>');
-        $('#ajaxContent').load($('#dashboard').attr('data-location'));
-    }
-    $('.ajaxLink').click(function() {
-
-        $('.ajaxLink').parent().removeClass('active');
-        $(this).parent().addClass('active');
-
-        var link = $(this).attr('data-location');
-
-        $('#ajaxContent').html('<i class="fa fa-spinner fa-spin"></i>');
-        $('#ajaxContent').load(link);
-        $("html, body").animate({ scrollTop: 0 }, "slow");
-    });
-
     $(document).ready(function() {
         $('#side-menu').metisMenu();
 
@@ -96,7 +72,7 @@
         );
 
         Messenger.options = {
-            extraClasses: 'messenger-fixed {{ isset($this->activeUser) ? $this->activeUser->alertLocation : "messenger-on-top" }}',
+            extraClasses: 'messenger-fixed {{ isset($this->activeUser) ? $this->activeUser->alertLocation : "messenger-on-bottom messenger-on-right" }}',
             theme: 'future'
         }
 
@@ -124,15 +100,6 @@
                 showCloseButton: true
             });
         }
-
-        $('#remoteModal').on('click', '.closeModal', function (e) {
-            var area = $(e.target).data('area');
-
-            $('#remoteModal').modal('hide');
-
-            $('#customizeArea').html('<i class="fa fa-spinner fa-spin"></i>');
-            $('#customizeArea').load('/admin/user/'+ area +'-customize');
-        });
 
         // On Ready Js
         @section('onReadyJs')

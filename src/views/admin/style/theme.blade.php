@@ -1,17 +1,15 @@
-{{ bForm::setSizes(4, 8)->ajaxForm('submitForm', 'Site theme has been updated.')->open() }}
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-        <h3 id="myModalLabel">Customize Site Theme</h3>
-    </div>
-    <div class="modal-body">
-    	{{ bForm::select('style', $availableThemes, Config::get('theme.theme.style'), null, 'Style') }}
-    	{{ bForm::select('src', ['local' => 'Local', 'vendor' => 'Vendor'], Config::get('theme.theme.src'), null, 'Source') }}
-		@foreach ($colors as $color => $values)
-			{{ bForm::color($color, $values['hex'], array('id' => $color .'Input'), $values['title']) }}
-		@endforeach
+<div class="panel panel-inverse">
+	<div class="panel-heading">
+		<div class="panel-title">Customize the Site Theme</div>
 	</div>
-	<div class="modal-footer">
-		{{ bForm::jsonSubmit('Save') }}
-		<div id="message"></div>
+	<div class="panel-body">
+		{{ bForm::open(false) }}
+			{{ bForm::select('style', $availableThemes, $currentTheme, null, 'Style') }}
+			{{ bForm::select('src', ['local' => 'Local', 'vendor' => 'Vendor'], $currentSrc, null, 'Source') }}
+			@foreach ($colors as $color => $values)
+				{{ bForm::color($color, $values['hex'], array('id' => $color .'Input'), $values['title']) }}
+			@endforeach
+			{{ bForm::submit('Save Changes', ['class' => 'btn btn-primary btn-block']) }}
+		{{ bForm::close() }}
 	</div>
-{{ Form::close() }}
+</div>

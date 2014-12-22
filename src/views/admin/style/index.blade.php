@@ -1,28 +1,30 @@
 <div class="row">
-    <div class="col-md-4">
-        <div class="widget widget-notification bg-info">
-            <div class="icon icon-lg"><i class="fa fa-css3"></i></div>
-            <div class="title">Theme</div>
-            <div class="focus">{{ ucfirst(Config::get('theme.theme.style')) }}</div>
-            <div class="bar-inverse"></div>
-            <div class="desc">
-                <a href="admin/style/theme" data-toggle="modal" data-target="#remoteModal">Customize</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="widget widget-notification bg-inverse">
-            <div class="icon icon-lg"><i class="fa fa-code"></i></div>
-            <div class="title">Laravel</div>
-            <div class="focus">{{ $laravelVersion }}</div>
-            <div class="bar"></div>
-            <div class="desc">
-                <a href="http://packagist.org/packages/laravel/framework#{{ $laravelVersion }}" target="_blank">Packagist</a>
+    @include('layouts.admin.notification',
+        [
+            'size'        => 4,
+            'color'       => 'info',
+            'icon'        => 'fa-css3',
+            'title'       => 'Theme',
+            'focus'       => ucfirst(Config::get('theme.theme.style')),
+            'bar'         => 'bar-inverse',
+            'description' =>
+                '<a href="'. URL::route('admin.style.theme', [], false) .'">Customize</a>'
+        ]
+    )
+    @include('layouts.admin.notification',
+        [
+            'size'        => 4,
+            'color'       => 'inverse',
+            'icon'        => 'fa-code',
+            'title'       => 'Laravel',
+            'focus'       => $laravelVersion,
+            'bar'         => 'bar',
+            'description' =>
+                '<a href="http://packagist.org/packages/laravel/framework#{{ $laravelVersion }}" target="_blank">Packagist</a>
                 &nbsp;|&nbsp;
-                <a href="http://laravel.com/docs" target="_blank">Documentation</a>
-            </div>
-        </div>
-    </div>
+                <a href="http://laravel.com/docs" target="_blank">Documentation</a>'
+        ]
+    )
 </div>
 <div class="row">
     <div class="col-md-4">

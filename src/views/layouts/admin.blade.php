@@ -1,6 +1,9 @@
 <!doctype html>
 <html>
 <head>
+    <?php
+    $config = json_decode(File::get(base_path() . '/admin.json'))
+    ?>
 	@include('layouts.admin.header')
 </head>
 <body class="fixed-navigation">

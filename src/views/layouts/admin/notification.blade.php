@@ -16,5 +16,14 @@
             @endif
         </div>
         <div class="{{ $bar }}"></div>
+        @if (isset($description))
+            <div class="desc">
+                @if (is_object($description))
+                    {{ ucfirst(call_user_func($description->method, $description->argument)) }}
+                @else
+                    {{ $description }}
+                @endif
+            </div>
+        @endif
     </div>
 </div>
