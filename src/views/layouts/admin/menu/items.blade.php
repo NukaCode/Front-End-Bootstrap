@@ -14,14 +14,18 @@
     @if (isset($details->subSections) && count($details->subSections) > 0)
         <ul class="nav nav-second-level">
             @foreach ($details->subSections as $subSection)
-                @include('layouts.admin.menu.item', ['details' => $subSection])
-                @if (isset($details->subSubSections) && count($details->subSubSections) > 0)
-                    <ul class="nav nav-third-level">
-                        @foreach ($details->subSubSections as $subSubSection)
-                            @include('layouts.admin.menu.item', ['details' => $subSubSection])
-                        @endforeach
-                    </ul>
-                @endif
+                <li {{ routeActive($subSection->route, $subSection->children) }}>
+                    @include('layouts.admin.menu.item', ['details' => $subSection])
+                    @if (isset($subSection->subSections) && count($subSection->subSections) > 0)
+                        <ul class="nav nav-third-level">
+                            @foreach ($subSection->subSections as $subSubSection)
+                                <li {{ routeActive($subSubSection->route, $subSubSection->children) }}>
+                                    @include('layouts.admin.menu.item', ['details' => $subSubSection])
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </li>
             @endforeach
         </ul>
     @endif
