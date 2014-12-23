@@ -9,7 +9,7 @@
 			@foreach ($colors as $color => $values)
 				{{ bForm::color($color, $values['hex'], array('id' => $color .'Input'), $values['title']) }}
 			@endforeach
-			{{ bForm::submit('Save Changes', ['class' => 'btn btn-primary btn-block']) }}
+			{{ bForm::submit('Save Changes') }}
 		{{ bForm::close() }}
 	</div>
 </div>

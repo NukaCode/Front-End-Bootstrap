@@ -374,8 +374,8 @@ EOT;
 		static $exists = false;
 
 		if (! $exists) {
-			$this->addToSection('css', $this->html->style('vendor/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css'));
-			$this->addToSection('jsInclude', $this->html->script('vendor/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js'));
+			$this->addToSection('css', $this->html->style('css/vendor/colorpicker/css/bootstrap-colorpicker.min.css'));
+			$this->addToSection('jsInclude', $this->html->script('js/vendor/bootstrap-colorpicker.js'));
 			$this->addToSection('onReadyJs', '
 $(\'.colorpicker\').colorpicker().on(\'changeColor\', function(ev){
 	$(\'#colorPreview\'+ $(this).attr(\'name\')).css(\'background-color\', ev.color.toHex());

@@ -1,22 +1,23 @@
 {
-    "navigation": {
-        "Style": {
-            "name": "Style",
-            "icon": "fa fa-twitter",
-            "route": "admin.style"
-        }
-    },
-    "notifications": [
-        {
-            "color": "info",
-            "title": "Theme",
-            "focus": {
-                "method": "Config::get",
-                "argument": "theme.theme.style"
-            },
-            "icon": "fa-css3",
-            "size": 3,
-            "bar": "bar-inverse"
-        }
-    ]
+  "navigation": {
+    "Style": {
+      "name": "Style",
+      "icon": "fa fa-twitter",
+      "route": "admin.style.index",
+      "children": ["admin.style.theme"]
+    }
+  },
+  "notifications": [
+    {
+      "color": "info",
+      "title": "Theme",
+      "focus": {
+        "method": "Config::get",
+        "argument": "theme.theme.style"
+      },
+      "icon": "fa-css3",
+      "size": 3,
+      "bar": "bar-inverse"
+    }
+  ]
 }
