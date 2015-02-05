@@ -4,16 +4,12 @@
 	@include('layouts.partials.header')
 </head>
 <body>
-	<div class="container-fluid">
-		@include('layouts.partials.menu')
-		<div id="content">
-		    @if (isset($content))
-			    {{ $content }}
-            @else
-			    @yield('content')
-            @endif
-		</div>
-	</div>
+	@include('layouts.partials.menu')
+	@if (isset($content))
+		{{ $content }}
+	@else
+		@yield('content')
+	@endif
 
 	@include('layouts.partials.modals')
 

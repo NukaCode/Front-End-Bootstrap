@@ -1,13 +1,8 @@
 <?php namespace NukaCode\Bootstrap;
 
-use Config;
-use Illuminate\Console\AppNamespaceDetectorTrait;
-use Illuminate\Foundation\AliasLoader;
-use Illuminate\Support\ServiceProvider;
-use NukaCode\Core\Console\AppNameCommand;
-use NukaCode\Core\Database\Collection;
+use NukaCode\Core\BaseServiceProvider;
 
-class BootstrapServiceProvider extends ServiceProvider {
+class BootstrapServiceProvider extends BaseServiceProvider {
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -18,22 +13,6 @@ class BootstrapServiceProvider extends ServiceProvider {
 
 	const version = '1.0.0';
 
-	const packageName = 'bootstrap';
-
-	const color = 'info';
-
-	const icon = 'fa-twitter';
-
-	/**
-	 * Bootstrap the application events.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
-		//$this->package('nukacode/bootstrap');
-	}
-
 	/**
 	 * Register the service provider.
 	 *
@@ -42,7 +21,7 @@ class BootstrapServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->shareWithApp();
-		$this->loadConfig();
+		$this->setConfig();
 		$this->registerViews();
 		$this->registerAliases();
 		$this->registerArtisanCommands();
@@ -65,9 +44,15 @@ class BootstrapServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	protected function loadConfig()
+	protected function setConfig()
 	{
-		//$this->app['config']->package('nukacode/bootstrap', __DIR__ . '/../../config');
+		$this->app['config']->set(
+			[
+				'nukacode' => [
+					'bootstrap' => $this->getConfig()
+				]
+			]
+		);
 	}
 
 	/**
@@ -92,22 +77,11 @@ class BootstrapServiceProvider extends ServiceProvider {
 			'HTML'   => 'NukaCode\Bootstrap\Support\Facades\Html\HTML',
 			'bForm'  => 'NukaCode\Bootstrap\Support\Facades\Html\bForm',
 			'BBCode' => 'NukaCode\Bootstrap\Support\Facades\Html\BBCode',
-
 		];
 
-		$appAliases = Config::get('core::nonCoreAliases');
-		$loader     = AliasLoader::getInstance();
+		$exclude = $this->app['config']->get('nukacode.bootstrap.excludeAliases');
 
-		foreach ($aliases as $alias => $class) {
-			if (! is_null($appAliases)) {
-				if (! in_array($alias, $appAliases)) {
-					$loader->alias($alias, $class);
-				}
-			} else {
-				$loader->alias($alias, $class);
-			}
-		}
-
+		$this->loadAliases($aliases, $exclude);
 	}
 
 	public function registerArtisanCommands()

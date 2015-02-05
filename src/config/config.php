@@ -14,10 +14,7 @@ return [
     | src to local to use files in app or vendor to use the files from core.
     |
     */
-    'theme' => [
-        'style' => 'dark',
-        'src'   => 'vendor'
-    ],
+    'theme' => 'nukacode-bootstrap-base',
 
     /*
     |--------------------------------------------------------------------------
@@ -28,6 +25,7 @@ return [
     |
     */
     'colors' => [
+        'bg'      => '#ffffff',
         'gray'    => '#343838',
         'primary' => '#5097b5',
         'info'    => '#3b81ba',
@@ -39,16 +37,39 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Available Themes
+    | Site Details
     |--------------------------------------------------------------------------
     |
-    | By default, core comes with two themes (default and dark).  If you create
-    | a custom theme, make sure to add it to this list so it is selectable
-    | in the admin panel.
+    | The name of your site and the icon it should use.  This will show up when
+    | twitter is selected as the menu.  Set the siteIcon to null for no icon.
     |
     */
-    'themes' => [
-        'default' => 'Default',
-        'dark' => 'Dark'
-    ]
+
+    'siteName' => 'YOUR_SITE',
+    'siteIcon' => null,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Menu
+    |--------------------------------------------------------------------------
+    |
+    | This variable is used to determine if the site uses the default twitter nav
+    | bar or any form of custom menu.  Set this value to the name of the blade
+    | located in views/layouts/menus that you wish to use.
+    | Included Options: twitter, utopian
+    |
+    */
+    'menu' => 'twitter',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Alias Exclusion
+    |--------------------------------------------------------------------------
+    |
+    | Use the following array to stop bootstrap from setting certain classes and keep
+    | the Laravel defaults.  This is less likely to be used since Laravel 5+ but
+    | it has been left in should it ever be needed.
+    |
+    */
+    'excludeAliases' => [],
 ];

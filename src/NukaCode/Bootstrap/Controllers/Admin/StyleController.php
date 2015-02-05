@@ -2,61 +2,79 @@
 
 use Illuminate\Config\Repository;
 use Illuminate\Foundation\Application;
+use NukaCode\Bootstrap\Filesystem\Less\Variables;
+use NukaCode\Bootstrap\Http\Requests\Admin\BowerTheme;
 use NukaCode\Bootstrap\Http\Requests\Admin\Theme;
 use NukaCode\Core\Controllers\AdminController;
 use NukaCode\Core\Remote\SSH;
 use NukaCode\Bootstrap\Remote\Theme as ConsoleTheme;
 use NukaCode\Bootstrap\Filesystem\Config\Theme as ConfigTheme;
+use NukaCode\Bootstrap\Filesystem\Theme as MainTheme;
 use NukaCode\Bootstrap\Filesystem\Less\Colors;
 use NukaCode\Core\Ajax\Ajax;
 
 class StyleController extends AdminController {
 
-    private $ssh;
+	private $ssh;
 
-    private $theme;
+	private $theme;
 
-    private $configTheme;
+	private $configTheme;
 
-    private $colors;
+	private $colors;
 
-    private $ajax;
+	private $ajax;
 
-    private $config;
+	private $config;
 
-    public function __construct(SSH $ssh, ConsoleTheme $theme, ConfigTheme $configTheme, Colors $colors, Ajax $ajax, Repository $config)
-    {
-        parent::__construct();
+	private $mainTheme;
 
-        $this->ssh         = $ssh;
-        $this->theme       = $theme;
-        $this->configTheme = $configTheme;
-        $this->colors      = $colors;
-        $this->ajax        = $ajax;
-        $this->config      = $config;
-    }
+	public function __construct(SSH $ssh, ConsoleTheme $theme, ConfigTheme $configTheme, Colors $colors, Ajax $ajax,
+								Repository $config, MainTheme $mainTheme)
+	{
+		parent::__construct();
 
-    public function index()
-    {
-        $laravelVersion = Application::VERSION;
-        $packages = $this->config->get('packages.nukacode');
+		$this->ssh         = $ssh;
+		$this->theme       = $theme;
+		$this->configTheme = $configTheme;
+		$this->colors      = $colors;
+		$this->ajax        = $ajax;
+		$this->config      = $config;
+		$this->mainTheme   = $mainTheme;
+	}
 
-        $this->setViewData(compact('laravelVersion', 'packages'));
-    }
+	public function index()
+	{
+		ppd($this->config->all());
+		$laravelVersion = Application::VERSION;
+		$packages       = $this->config->get('packages.nukacode');
+		$currentTheme   = $this->config->get('theme.theme');
 
-    public function getTheme()
-    {
-        $colors = $this->colors->getEntry();
+		$bower        = json_decode(\File::get(base_path('/bower.json')));
+		$themeVersion = $bower->dependencies->$currentTheme;
 
-        $availableThemes = $this->config->get('theme.themes');
-        $currentTheme    = $this->config->get('theme.theme.style');
-        $currentSrc      = $this->config->get('theme.theme.src');
+		$this->setViewData(compact('laravelVersion', 'packages', 'currentTheme', 'themeVersion'));
+	}
 
-        $this->setViewData(compact('colors', 'availableThemes', 'currentTheme', 'currentSrc'));
-    }
+	public function configRefresh()
+	{
+		$this->configTheme->refreshConfig();
 
-    public function postTheme(Theme $request)
-    {
+		return \Redirect::route('admin.style.index')->with('message', 'Config refreshed.');
+	}
+
+	public function getThemeColors()
+	{
+		$colors = $this->colors->getEntry();
+
+		$availableThemes = $this->config->get('theme.themes');
+		$currentTheme    = $this->config->get('theme.theme');
+
+		$this->setViewData(compact('colors', 'availableThemes', 'currentTheme'));
+	}
+
+	public function postThemeColors(Theme $request)
+	{
 		// Update the colors less file
 		$this->colors->updateEntry($request->all());
 
@@ -64,9 +82,76 @@ class StyleController extends AdminController {
 		$this->configTheme->updateEntry($request->all());
 
 		// Generate the new theme css file
-		$commands = $this->theme->generateTheme($request->get('style'), $request->get('src'));
-		$this->ssh->runCommands($commands);
+		exec('node ' . base_path('node_modules/gulp/bin/gulp.js'));
 
 		return \Redirect::route('admin.style.index')->with('message', 'Theme updated.');
-    }
-} 
+	}
+
+	public function getThemeChange()
+	{
+		$availableThemes = [];
+
+		exec('node ' . base_path() . '/node_modules/bower/bin/bower search nukacode-bootstrap', $availableThemes);
+		unset($availableThemes[0]);
+		unset($availableThemes[1]);
+
+		foreach ($availableThemes as $key => $availableTheme) {
+			if (strpos($availableTheme, 'admin') !== false) {
+				unset($availableThemes[$key]);
+			} else {
+				$availableThemes[$key] = explode(' ', trim($availableTheme))[0];
+			}
+		}
+
+		$availableThemes = array_combine(array_values($availableThemes), array_values($availableThemes));
+
+		$currentTheme = $this->config->get('theme.theme');
+
+		$this->setViewData(compact('colors', 'availableThemes', 'currentTheme'));
+	}
+
+	public function postThemeChange(BowerTheme $request)
+	{
+		$currentTheme = $this->config->get('theme.theme');
+		$newTheme     = $request->get('theme');
+
+		if ($currentTheme != $newTheme) {
+			// Remove the current theme
+			exec('node ' . base_path('node_modules/bower/bin/bower uninstall -S ' . $currentTheme));
+
+			// Add the new theme
+			exec('node ' . base_path('node_modules/bower/bin/bower install -S ' . $newTheme));
+
+			// Generate the new theme css file
+			exec('node ' . base_path('node_modules/gulp/bin/gulp.js'));
+		}
+
+		return \Redirect::route('admin.style.index')->with('message', 'Theme updated.');
+	}
+
+	public function getBowerThemeVersions($themeName)
+	{
+		$versions      = false;
+		$themeVersions = [];
+		$themeInfo     = [];
+
+		exec('export PATH="$PATH:/usr/bin";node ' . base_path('/node_modules/bower/bin/bower') . ' info ' . $themeName, $themeInfo);
+
+		foreach ($themeInfo as $key => $infoPiece) {
+			if (stripos($infoPiece, 'Available versions:') !== false) {
+				$versions = true;
+				continue;
+			} elseif ($versions == false) {
+				unset($themeInfo[$key]);
+			} elseif ($versions == true) {
+				$version = substr(explode('.', trim($infoPiece))[0], 2);
+
+				if (is_numeric($version)) {
+					$themeVersions[$version] = $version;
+				}
+			}
+		}
+
+		return $themeVersions;
+	}
+}

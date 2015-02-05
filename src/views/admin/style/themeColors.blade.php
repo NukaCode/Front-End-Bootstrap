@@ -4,8 +4,6 @@
 	</div>
 	<div class="panel-body">
 		{{ bForm::open(false) }}
-			{{ bForm::select('style', $availableThemes, $currentTheme, null, 'Style') }}
-			{{ bForm::select('src', ['local' => 'Local', 'vendor' => 'Vendor'], $currentSrc, null, 'Source') }}
 			@foreach ($colors as $color => $values)
 				{{ bForm::color($color, $values['hex'], array('id' => $color .'Input'), $values['title']) }}
 			@endforeach

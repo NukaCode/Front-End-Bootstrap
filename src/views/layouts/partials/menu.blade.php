@@ -1,6 +1,6 @@
-@if (isset($menuItems))
+@if (Menu::count() > 0)
     <div id="header">
-        {{ $menuItems }}
+        @include('layouts.menus.twitter')
     </div>
     <hr />
 @endif

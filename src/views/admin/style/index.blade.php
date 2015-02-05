@@ -5,10 +5,12 @@
             'color'       => 'info',
             'icon'        => 'fa-css3',
             'title'       => 'Theme',
-            'focus'       => ucfirst(Config::get('theme.theme.style')),
+            'focus'       => Str::title(Config::get('theme.theme')),
             'bar'         => 'bar-inverse',
             'description' =>
-                '<a href="'. URL::route('admin.style.theme', [], false) .'">Customize</a>'
+                '<a href="'. URL::route('admin.style.theme.colors', [], false) .'">Customize Colors</a>
+                &nbsp;|&nbsp;
+                <a href="'. URL::route('admin.style.config.refresh', [], false) .'">Update config files <i class="fa fa-refresh"></i></a>'
         ]
     )
     @include('layouts.admin.notification',
@@ -33,12 +35,8 @@
             <table class="table table-condensed table-striped table-hover">
                 <tbody>
                     <tr>
-                        <td>Style</td>
-                        <td>{{ Config::get('theme.theme.style') }}</td>
-                    </tr>
-                    <tr>
-                        <td>Source</td>
-                        <td>{{ Config::get('theme.theme.src') }}</td>
+                        <td>Theme</td>
+                        <td>{{ $currentTheme }} | {{ $themeVersion }}</td>
                     </tr>
                     <tr>
                         <td>Color: Gray</td>
@@ -91,6 +89,11 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="panel-footer text-right">
+                <div class="btn-group">
+                    {{ HTML::linkRoute('admin.style.theme.colors', 'Edit Colors', [], ['class' => 'btn btn-xs btn-primary']) }}
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-md-4">

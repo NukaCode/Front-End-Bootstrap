@@ -9,11 +9,11 @@
             <div class="panel-heading">Laravel Details</div>
             <table class="table table-condensed table-striped table-hover">
                 <tbody>
-                <tr>
-                    <td>Laravel</td>
-                    <td style="width: 20%;">{{ $laravelVersion }}</td>
-                    <td style="width: 20%;" class="text-right">{{ HTML::link('http://packagist.org/packages/laravel/framework#'. $laravelVersion, 'View', ['target' => '_blank']) }}</td>
-                </tr>
+                    <tr>
+                        <td>Laravel</td>
+                        <td style="width: 20%;">{{ $laravelVersion }}</td>
+                        <td style="width: 20%;" class="text-right">{{ HTML::link('http://packagist.org/packages/laravel/framework#'. $laravelVersion, 'View', ['target' => '_blank']) }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -23,13 +23,13 @@
             <div class="panel-heading">Nuka Code Package Versions</div>
             <table class="table table-condensed table-striped table-hover">
                 <tbody>
-                @foreach ($packages as $package => $details)
-                    <tr>
-                        <td>{{ Str::title($package) }}</td>
-                        <td style="width: 20%;">{{ $details['version'] }}</td>
-                        <td style="width: 20%;" class="text-right">{{ HTML::link('http://packagist.org/packages/nukacode/'. $package .'#'. $details['version'], 'View', ['target' => '_blank']) }}</td>
-                    </tr>
-                @endforeach
+                    @foreach ($packages as $package => $details)
+                        <tr>
+                            <td>{{ Str::title($package) }}</td>
+                            <td style="width: 20%;">{{ $details['version'] }}</td>
+                            <td style="width: 20%;" class="text-right">{{ HTML::link('http://packagist.org/packages/nukacode/'. $package .'#'. $details['version'], 'View', ['target' => '_blank']) }}</td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

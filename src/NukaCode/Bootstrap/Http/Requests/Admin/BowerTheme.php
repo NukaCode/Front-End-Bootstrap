@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use NukaCode\Core\Http\Requests\BaseRequest;
 
-class Theme extends BaseRequest {
+class BowerTheme extends BaseRequest {
 
 	/**
 	 * Get the validation rules that apply to the request.
@@ -13,14 +13,7 @@ class Theme extends BaseRequest {
 	public function rules()
 	{
 		return [
-			'bg'      => 'required',
-			'gray'    => 'required',
-			'primary' => 'required',
-			'info'    => 'required',
-			'success' => 'required',
-			'warning' => 'required',
-			'danger'  => 'required',
-			'menu'    => 'required',
+			'theme' => 'required',
 		];
 	}
 

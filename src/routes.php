@@ -13,13 +13,33 @@ $router->group(['namespace' => 'NukaCode\Bootstrap\Controllers'], function ($rou
 		|--------------------------------------------------------------------------
 		*/
 		$router->group(['prefix' => 'style'], function ($router) {
-			$router->get('/theme', [
-				'as'   => 'admin.style.theme',
-				'uses' => 'StyleController@getTheme'
+			$router->get('/theme-colors', [
+				'as'   => 'admin.style.theme.colors',
+				'uses' => 'StyleController@getThemeColors'
 			]);
-			$router->post('/theme', [
-				'as'   => 'admin.style.theme',
-				'uses' => 'StyleController@postTheme'
+			$router->post('/theme-colors', [
+				'as'   => 'admin.style.theme.colors',
+				'uses' => 'StyleController@postThemeColors'
+			]);
+			$router->get('/theme-change', [
+				'as'   => 'admin.style.theme.change',
+				'uses' => 'StyleController@getThemeChange'
+			]);
+			$router->post('/theme-change', [
+				'as'   => 'admin.style.theme.change',
+				'uses' => 'StyleController@postThemeChange'
+			]);
+			$router->get('/theme-versions/{name}', [
+				'as'   => 'admin.style.theme.versions',
+				'uses' => 'StyleController@getBowerThemeVersions'
+			]);
+			$router->get('/kitchen-sink', [
+				'as'   => 'admin.style.kitchenSink',
+				'uses' => 'StyleController@kitchenSink'
+			]);
+			$router->get('/config-refresh', [
+				'as'   => 'admin.style.config.refresh',
+				'uses' => 'StyleController@configRefresh'
 			]);
 			$router->get('/', [
 				'as'   => 'admin.style.index',

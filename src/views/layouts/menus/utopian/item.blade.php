@@ -1,14 +1,12 @@
-@if ($item->hasItems())
-    <li class="dropdown {{ $item->isActive() ? 'active' : '' }}">
-        {{ HTML::link($item->option('link'), $item->option('title'), array_except($item->getOptions(), ['title', 'link', 'prefix', 'key'])) }}
+@if (isset($item->items) && $item->count() > 0)
+    <li class="dropdown {{ $item->active ? 'active' : '' }}">
+        {{ HTML::link($item->url, $item->name, $item->options) }}
         <ul>
-            @foreach ($item->getItems() as $childItem)
-                @include('item', ['item' => $childItem])
-            @endforeach
+            @each('layouts.menus.utopian.item', $item->items, 'item')
         </ul>
     </li>
 @else
-    <li class="{{ $item->isActive() ? 'active' : '' }}">
-        {{ HTML::link($item->option('link'), $item->option('title'), array_except($item->getOptions(), ['title', 'link', 'prefix', 'key'])) }}
+    <li class="{{ $item->active ? 'active' : '' }}">
+        {{ HTML::link($item->url, $item->name, $item->options) }}
     </li>
 @endif

@@ -1,18 +1,15 @@
 <div id="mainMenu">
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-		<ul class="nav navbar-nav">
-			@foreach ($menuItems->getItems() as $item)
-				@if ($item->option('key') != 'right')
-					@include('twitter.item')
-				@endif
-			@endforeach
-		</ul>
-		<ul class="nav navbar-nav navbar-right">
-		@foreach($menuItems->item('right')->getItems() as $item)
-			@include('twitter.item')
-		@endforeach
-		</ul>
+		@if (Menu::exists('leftMenu') && count(Menu::getMenu('leftMenu')->items) > 0)
+			<ul class="nav navbar-nav">
+				@each('layouts.menus.twitter.item', Menu::getMenu('leftMenu')->items, 'item')
+			</ul>
+		@endif
+		@if (Menu::exists('rightMenu') && count(Menu::getMenu('rightMenu')->items) > 0)
+			<ul class="nav navbar-nav navbar-right">
+				@each('layouts.menus.twitter.item', Menu::getMenu('rightMenu')->items, 'item')
+			</ul>
+		@endif
 	</nav>
 </div>
 <br style="clear: both;" />
-{{--<br style="clear: both;" />--}}
