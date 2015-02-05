@@ -34,13 +34,5 @@
       "NukaCode\\Bootstrap\\": "src/NukaCode/Bootstrap"
     }
   },
-  "scripts": {
-    "post-install-cmd": [
-      "php artisan nuka:version"
-    ],
-    "post-update-cmd": [
-      "php artisan nuka:version"
-    ]
-  },
   "minimum-stability": "dev"
 }
