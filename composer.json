@@ -13,7 +13,7 @@
     }
   ],
   "require": {
-    "nukacode/core": "~2.0"
+    "nukacode/core": "dev-master"
   },
   "require-dev": {
     "phpspec/phpspec": "~2.1",
