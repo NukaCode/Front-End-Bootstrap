@@ -1,12 +1,6 @@
-.. NukaCode documentation master file, created by
-sphinx-quickstart on Fri Jan 30 10:29:53 2015.
-You can adapt this file completely to your liking, but it should at least
-contain the root `toctree` directive.
-
-Welcome to NukaCode Bootstrap!
+Welcome to NukaCode Front End for Bootstrap!
 =======
-This package is designed to offer some helpful tools for a laravel based site.  It works best with NukaCode - Laravel
-Base, but does not require it.
+This package is designed to make using Twitter Bootstrap much easier in Laravel.  It requires Core, but otherwise, works out of the box.
 
 ======
 Badges
@@ -26,22 +20,19 @@ Badges
 =====
 
 Links
--------
-.. _Github: https://github.com/NukaCode/core/tree/master/src/NukaCode/Bootstrap
-.. _Packagist: https://packagist.org/packages/nukacode/bootstrap
-
-* `Github`_
-* `Packagist`_
+-----
+* `Github <https://github.com/NukaCode/core/tree/master/src/NukaCode/Front-End-Bootstrap>`_
+* `Packagist <https://packagist.org/packages/nukacode/bootstrap>`_
 
 Installation
--------
+------------
 .. toctree::
     :maxdepth: 2
 
-       install
+        install
 
 Themes
--------
+------
 .. toctree::
     :maxdepth: 2
 
