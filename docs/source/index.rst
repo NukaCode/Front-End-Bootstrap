@@ -21,7 +21,7 @@ Badges
 
 Links
 -----
-* `Github <https://github.com/NukaCode/core/tree/master/src/NukaCode/Front-End-Bootstrap>`_
+* `Github <https://github.com/NukaCode/Front-End-Bootstrap>`_
 * `Packagist <https://packagist.org/packages/nukacode/bootstrap>`_
 
 Installation
