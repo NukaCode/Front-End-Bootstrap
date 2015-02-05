@@ -5,11 +5,11 @@ This package is designed to make using Twitter Bootstrap much easier in Laravel.
 ======
 Badges
 ======
-.. image:: https://scrutinizer-ci.com/g/NukaCode/Front-End-Bootstrap/badges/quality-score.png?b=Laravel5
+.. image:: https://scrutinizer-ci.com/g/NukaCode/Front-End-Bootstrap/badges/quality-score.png?b=master
     :target: https://scrutinizer-ci.com/g/NukaCode/Front-End-Bootstrap/?branch=Laravel5
-.. image:: https://scrutinizer-ci.com/g/NukaCode/Front-End-Bootstrap/badges/coverage.png?b=Laravel5
-    :target: https://scrutinizer-ci.com/g/NukaCode/Front-End-Bootstrap/?branch=Laravel5
-.. image:: https://travis-ci.org/NukaCode/Front-End-Bootstrap.svg?branch=Laravel5
+.. image:: https://scrutinizer-ci.com/g/NukaCode/Front-End-Bootstrap/badges/coverage.png?b=master
+    :target: https://scrutinizer-ci.com/g/NukaCode/Front-End-Bootstrap/?branch=master
+.. image:: https://travis-ci.org/NukaCode/Front-End-Bootstrap.svg?branch=master
     :target: https://travis-ci.org/NukaCode/Front-End-Bootstrap
 .. image:: https://poser.pugx.org/nukacode/Front-End-Bootstrap/v/stable.svg
     :target: https://packagist.org/packages/nukacode/Front-End-Bootstrap
@@ -29,12 +29,12 @@ Installation
 .. toctree::
     :maxdepth: 2
 
-        install
+    install
 
 Themes
 ------
 .. toctree::
     :maxdepth: 2
 
-        themes/admin
-        themes/main
+    themes/admin
+    themes/main

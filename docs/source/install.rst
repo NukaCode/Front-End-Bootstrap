@@ -1,23 +1,38 @@
 Installation
-=======
+====================================
 
 Composer
--------
+------------------------------------
 You will need primarily only Laravel to run core.
 
-``composer require laravel/framework:~5.0``
-
-Configs/Migrations/Seeds
--------
-Once that is done, you can publish the configs and migrations.
-
-``php artisan vendor:publish``
-
-This will create a nukacode-core.php in your config folder and add all the migrations and seeds inside your database/
- folders.
+``composer require nukacode/front-end-bootstrap:~1.0``
 
 Routes
--------
+------------------------------------
 If you would like to use the included routes, add the following to your ``app/Http/routes.php`` file.
 
-``include_once(base_path() .'/vendor/nukacode/core/src/routes.php');``
+``include_once(base_path() .'/vendor/nukacode/bootstrap/src/routes.php');``
+
+Service Providers
+------------------------------------
+Add the following service providers to ``configs/app.php``.
+::
+
+     'NukaCode\Bootstrap\BootstrapServiceProvider',
+     'NukaCode\Bootstrap\Html\HtmlServiceProvider',
+Themes
+------------------------------------
+Bower
+~~~~~~~
+.. hint:: You only need to have one of these.
+::
+
+    bower install -S nukacode-bootstrap-base#~0
+    bower install -S nukacode-bootstrap-dark#~0
+Resources
+~~~~~~~~~
+At the top of ``resources/assets/less/app.less`` add the line below that matches your theme.  Make sure this is first line of that file.
+::
+
+    @import '../../../vendor/bower_components/nukacode-bootstrap-base/less/base';
+    @import '../../../vendor/bower_components/nukacode-bootstrap-dark/less/dark';
