@@ -13,6 +13,7 @@
     }
   ],
   "require": {
+    "laravel/framework": "~4.2",
     "nukacode/core": "dev-master"
   },
   "require-dev": {
@@ -40,5 +41,6 @@
     "post-update-cmd": [
       "php artisan nuka:version"
     ]
-  }
+  },
+  "minimum-stability": "dev"
 }
