@@ -31,6 +31,13 @@ Installation
 
     install
 
+New CSS Classes
+------------
+.. toctree::
+    :maxdepth: 2
+
+    features
+
 Themes
 ------
 .. toctree::
