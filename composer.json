@@ -1,5 +1,5 @@
 {
-  "name": "nukacode/bootstrap",
+  "name": "nukacode/front-end-bootstrap",
   "description": "Helpers and views for a basic bootstrap setup.",
   "license": "MIT",
   "authors": [
@@ -13,8 +13,8 @@
     }
   ],
   "require": {
-    "laravel/framework": "~4.2",
-    "nukacode/core": "dev-master"
+    "laravel/framework": "~5.0",
+    "nukacode/core": "~2.0"
   },
   "require-dev": {
     "phpspec/phpspec": "~2.1",
