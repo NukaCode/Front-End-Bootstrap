@@ -36,7 +36,15 @@ New CSS Classes
 .. toctree::
     :maxdepth: 2
 
-    features
+    new-css
+
+Laravel Helpers
+------------
+.. toctree::
+    :maxdepth: 2
+
+    html
+    form
 
 Themes
 ------

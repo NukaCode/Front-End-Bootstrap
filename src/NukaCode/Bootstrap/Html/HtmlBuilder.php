@@ -4,152 +4,134 @@ use Illuminate\Html\HtmlBuilder as BaseHtmlBuilder;
 
 class HtmlBuilder extends BaseHtmlBuilder {
 
-	public function get()
-	{
-		return $this;
-	}
+    public function linkImage($url, $imageSrc, $attributes = [], $https = null)
+    {
+        $url = $this->url->to($url, $https);
 
-	/**
-	 * Create a link including an image
-	 *
-	 * @static
-	 *
-	 * @param string The URL the link will point to
-	 * @param string The image to use (HTML::image)
-	 * @param array Any attributes the link itself should have
-	 * @param boolen Determine if the link is https or http
-	 *
-	 * @return string
-	*/
-	public function linkImage($url, $imagesrc, $attributes = array(), $https = null)
-	{
-		$url = $this->url->to($url, $https);
+        return '<a href="' . $url . '"' . static::attributes($attributes) . '>' . $imageSrc . '</a>';
+    }
 
-		return '<a href="'.$url.'"'.static::attributes($attributes).'>'.$imagesrc.'</a>';
-	}
+    public function linkRouteImage($route, array $parameters, $imageSrc, $attributes = [], $https = null)
+    {
+        $url = $this->url->route($route, $parameters, $https);
 
-	public function linkRouteImage($route, array $parameters, $imagesrc, $attributes = array(), $https = null)
-	{
-		$url = $this->url->route($route, $parameters, $https);
+        return '<a href="' . $url . '"' . static::attributes($attributes) . '>' . $imageSrc . '</a>';
+    }
 
-		return '<a href="'.$url.'"'.static::attributes($attributes).'>'.$imagesrc.'</a>';
-	}
+    public function linkIcon($url, $iconClasses, $iconText = null, $attributes = [], $https = null)
+    {
+        $url = $this->url->to($url, $https);
 
-	public function addButton($url, $iconClass = 'fa-plus')
-	{
-		return $this->linkIcon($url, 'fa '. $iconClass);
-	}
+        return '<a href="' . $url . '"' . static::attributes($attributes) . '><i class="' . $iconClasses . '"></i> ' . $iconText . '</a>';
+    }
 
-	public function editButton ($url, $btnClass = 'primary')
-	{
-		return $this->link($url, 'Edit', array('class' => 'btn btn-xs btn-'. $btnClass));
-	}
+    public function linkRouteIcon($route, array $parameters, $iconClasses, $iconText = null, $attributes = [],
+                                  $https = null)
+    {
+        $url = $this->url->route($route, $parameters, $https);
 
-	public function deleteButton ($url, $btnClass = 'danger')
-	{
-		return $this->link($url, 'Delete', array('class' => 'confirm-remove btn btn-xs btn-'. $btnClass));
-	}
+        return '<a href="' . $url . '"' . static::attributes($attributes) . '><i class="' . $iconClasses . '"></i> ' . $iconText . '</a>';
+    }
 
-	/**
-	 * Create a link including twitter bootstrap icons
-	 *
-	 * @param string The URL the link will point to
-	 * @param string Any classes the icon should have (fa fa-white, fa fa-check, etc)
-	 * @param string Text to show after the icon
-	 * @param array Any attributes the link itself should have
-	 * @param boolen Determine if the link is https or http
-	 *
-	 * @return string
-	*/
-	public function linkIcon($url, $iconClasses, $iconText = null, $attributes = array(), $https = null)
-	{
-		$url = $this->url->to($url, $https);
+    public function span($value, $attributes = [])
+    {
+        return '<span' . static::attributes($attributes) . '>' . $value . '</span>';
+    }
 
-		return '<a href="'.$url.'"'.static::attributes($attributes).'><i class="'.$iconClasses.'"></i> '. $iconText .'</a>';
-	}
+    public function bold($value, $attributes = [])
+    {
+        return '<strong' . static::attributes($attributes) . '>' . $value . '</strong>';
+    }
 
-	public function linkRouteIcon($route, array $parameters, $iconClasses, $iconText = null, $attributes = array(), $https = null)
-	{
-		$url = $this->url->route($route, $parameters, $https);
+    public function italic($value, $attributes = [])
+    {
+        return '<em' . static::attributes($attributes) . '>' . $value . '</em>';
+    }
 
-		return '<a href="'.$url.'"'.static::attributes($attributes).'><i class="'.$iconClasses.'"></i> '. $iconText .'</a>';
-	}
+    public function delete($value, $attributes = [])
+    {
+        return '<del' . static::attributes($attributes) . '>' . $value . '</del>';
+    }
 
-	/**
-	 * Generate a HTML span.
-	 *
-	 * @param  string  $value
-	 * @param  array   $attributes
-	 * @return string
-	 */
-	public function span($value, $attributes = array())
-	{
-		return '<span'.static::attributes($attributes).'>'.$value.'</span>';
-	}
-	
-	/**
-	 * Generate a strong element.
-	 *
-	 * @access	public
-	 * @param	string	$data
-	 * @return	string
-	 */
-	public function strong($data) {
-		return '<span style="font-weight: bold;">' . $data . '</span>';
-	}
+    public function strike($value, $attributes = [])
+    {
+        return '<s' . static::attributes($attributes) . '>' . $value . '</s>';
+    }
 
-	/**
-	 * Generate an em element.
-	 *
-	 * @access	public
-	 * @param	string	$data
-	 * @return	string
-	 */
-	public function em($data) {
-		return '<span style="font-style: italic;">' . $data . '</span>';
-	}
+    public function insert($value, $attributes = [])
+    {
+        return '<ins' . static::attributes($attributes) . '>' . $value . '</ins>';
+    }
 
-	/**
-	 * Generate a code element.
-	 *
-	 * @access	public
-	 * @param	string	$data
-	 * @return	string
-	 */
-	public function code($data) {
-		return '<code>' . e($data) . '</code>';
-	}
+    public function underline($value, $attributes = [])
+    {
+        return '<u' . static::attributes($attributes) . '>' . $value . '</u>';
+    }
 
-	/**
-	 * Generate a blockquote element.
-	 *
-	 * @access	public
-	 * @param	string	$data
-	 * @return	string
-	 */
-	public function quote($data) {
-		return '<blockquote><p>' . $data . '</p></blockquote>';
-	}
+    public function mark($value, $attributes = [])
+    {
+        return '<mark' . static::attributes($attributes) . '>' . $value . '</mark>';
+    }
 
-	/**
-	 * Generate a del element.
-	 *
-	 * @access	public
-	 * @param	string	$data
-	 * @return	string
-	 */
-	public function del($data) {
-		return '<del>' . $data . '</del>';
-	}
-	/**
-	 * Generate an iframe element.
-	 *
-	 * @access	public
-	 * @param	string	$url
-	 * @param	array	$attributes
-	 * @return	string
-	 */
-	public function iframe($url, $attributes = array()) {
-		return '<iframe src="' . $url . '"' . static::attributes($attributes) . '></iframe>';
-	}
+    public function small($value, $attributes = [])
+    {
+        return '<small' . static::attributes($attributes) . '>' . $value . '</small>';
+    }
+
+    public function code($value, $attributes = [])
+    {
+        return '<code' . static::attributes($attributes) . '>' . e($value) . '</code>';
+    }
+
+    public function lead($value)
+    {
+        return '<p class="lead">' . $value . '</p>';
+    }
+
+    public function quote($value, $source = null)
+    {
+        $source = $source == null ? null : '<footer>' . $source . '</footer>';
+
+        return '<blockquote><p>' . $value . '</p>' . $source . '</blockquote>';
+    }
+
+    public function description($list, $attributes = [])
+    {
+        $html = '';
+
+        foreach ($list as $bold => $text) {
+            $html .= '<dt>' . $bold . '</dt>';
+            $html .= '<dd>' . $text . '</dd>';
+        }
+
+        return '<dl' . static::attributes($attributes) . '>' . $html . '</dl>';
+    }
+
+    public function kbd($keys)
+    {
+        if (is_array($keys)) {
+            return '<kbd>' . implode(' + ', array_map([$this, 'kbd'], $keys)) . '</kbd>';
+        }
+
+        return '<kbd>' . $keys . '</kbd>';
+    }
+
+    public function embed($url, $aspect = '16by9')
+    {
+        $validAspects = ['16by9', '4by3'];
+
+        if (! in_array($aspect, $validAspects)) {
+            throw new \InvalidArguementException('Aspect ratio not recognized.');
+        }
+
+        return '
+            <div class="embed-responsive embed-responsive-' . $aspect . '">
+                <iframe class="embed-responsive-item" src="' . $url . '"></iframe>
+            </div>';
+    }
+
+    public function iframe($url, $attributes = [])
+    {
+        return '<iframe src="' . $url . '"' . static::attributes($attributes) . '></iframe>';
+    }
 }

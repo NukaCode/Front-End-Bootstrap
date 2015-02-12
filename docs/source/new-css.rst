@@ -176,3 +176,28 @@ danger                .. image:: images/css/well-title-danger.png
 
 Well Title Buttons
 ~~~~~~~~~~~~~~~~~~
+Well title buttons work like panel buttons.  Unlike panel buttons, there can only be one at a time.
+
+Code
+^^^^^^^
+.. code:: HTML
+
+    <div class="well">
+        <div class="well-title">
+            <div class="well-btn well-btn-right"><i class="fa fa-plus"></i></div>
+            Well title
+        </div>
+        Default Well
+    </div>
+
+Output
+^^^^^^^
+===================== ========================
+Class                 Image
+===================== ========================
+<none>                .. image:: images/css/well-button.png
+info                  .. image:: images/css/well-button-info.png
+success               .. image:: images/css/well-button-success.png
+warning               .. image:: images/css/well-button-warning.png
+danger                .. image:: images/css/well-button-danger.png
+===================== ========================

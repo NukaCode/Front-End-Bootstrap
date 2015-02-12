@@ -14,6 +14,7 @@
   ],
   "require": {
     "laravel/framework": "~5.0",
+    "illuminate/html": "~5.0",
     "nukacode/core": "~2.0"
   },
   "require-dev": {
