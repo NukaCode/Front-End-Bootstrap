@@ -1,619 +1,509 @@
 <?php namespace NukaCode\Bootstrap\Html;
 
-use Illuminate\Foundation\Application;
-use Illuminate\Html\FormBuilder as BaseFormBuilder;
 use Illuminate\Routing\UrlGenerator;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\View\Factory;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Html\FormBuilder as BaseFormBuilder;
 
-class FormBuilder {
+class FormBuilder extends BaseFormBuilder {
 
-	protected $html;
+    public    $labelSize       = 2;
 
-	protected $form;
+    public    $inputSize       = 10;
 
-	protected $request;
+    public    $iconSize        = 0;
 
-	protected $view;
+    public    $type            = 'horizontal';
 
-	protected $app;
+    public    $allowedTypes    = [
+        'basic'      => null,
+        'inline'     => 'form-inline',
+        'horizontal' => 'form-horizontal',
+    ];
 
-	protected $url;
+    protected $previousSizes   = null;
 
-	public    $labelSize       = 2;
+    protected $requiredClasses = [];
 
-	public    $inputSize       = 10;
+    private   $view;
 
-	public    $iconSize        = 0;
+    public function __construct(HtmlBuilder $html, UrlGenerator $url, $csrfToken, Factory $view)
+    {
+        $this->url       = $url;
+        $this->html      = $html;
+        $this->csrfToken = $csrfToken;
+        $this->view      = $view;
+    }
 
-	public    $formId          = null;
+    public function open(array $options = [], $type = 'horizontal')
+    {
+        // Set the form type
+        $this->setType($type);
 
-	public    $type            = 'horizontal';
+        // Make sure the form has the proper class
+        $formClass = $this->allowedTypes[$this->type];
+        $options   = $this->verifyHasOption($options, 'class', $formClass);
 
-	protected $customFormGroup = 0;
+        return parent::open($options);
+    }
 
-	public    $allowedTypes    = [
-		'basic'      => null,
-		'inline'     => 'form-inline',
-		'horizontal' => 'form-horizontal',
-	];
+    public function setType($type)
+    {
+        if (! array_key_exists($type, $this->allowedTypes)) {
+            throw new \InvalidArgumentException('Form type [' . $type . '] not allowed.');
+        }
 
-	public function __construct(HtmlBuilder $html, Request $request, Factory $view, Application $app, UrlGenerator $url)
-	{
-		$this->html    = $html;
-		$this->request = $request;
-		$this->view    = $view;
-		$this->app     = $app;
-		$this->url     = $url;
+        $this->type = $type;
 
-		$this->form = new BaseFormBuilder($this->html, $this->url, $this->app['session.store']->getToken());
-	}
+        return $this;
+    }
 
-	public function get()
-	{
-		return $this;
-	}
+    public function setSizes($labelSize, $inputSize = null, $iconSize = 0)
+    {
+        $this->labelSize = $labelSize;
 
-	public function setType($type)
-	{
-		if (! array_key_exists($type, $this->allowedTypes)) {
-			throw new \InvalidArgumentException('Form type not allowed.');
-		}
+        if ($inputSize == null) {
+            $inputSize = 12 - $labelSize;
+        }
+        $this->inputSize = $inputSize;
+        $this->iconSize  = $iconSize;
 
-		$this->type = $type;
+        return $this;
+    }
 
-		return $this;
-	}
+    public function groupOpen($labelSize = null, $inputSize = null, $iconSize = null)
+    {
+        if ($labelSize != null) {
+            $this->previousSizes = [$this->labelSize, $this->inputSize, $this->iconSize];
 
-	public function setSizes($labelSize, $inputSize = null, $iconSize = null)
-	{
-		$this->labelSize = $labelSize;
+            $this->setSizes($labelSize, $inputSize, $iconSize);
+        }
 
-		if ($inputSize == null) {
-			$inputSize = 12 - $labelSize;
-		}
-		$this->inputSize = $inputSize;
-		$this->iconSize  = $iconSize;
+        $classes = implode(' ', $this->requiredClasses);
 
-		return $this;
-	}
+        return <<<HTML
+<div class="form-group {$classes}">
+HTML;
+    }
 
-	public function open($files = true, $options = [])
-	{
-		$formClass = $this->allowedTypes[$this->type];
+    public function groupClose()
+    {
+        if ($this->previousSizes != null) {
+            call_user_func_array([$this, 'setSizes'], $this->previousSizes);
 
-		if (! isset($options['class'])) {
-			$options['class'] = $formClass;
-		} elseif (strpos($options['class'], $formClass) === false) {
-			$options['class'] = $options['class'] . ' ' . $formClass;
-		}
+            $this->previousSizes = null;
+        }
 
-		if ($this->formId != null) {
-			$options['id'] = $this->formId;
-		}
+        $inputClose = $this->getInputWrapperClose();
 
-		if ($files == true) {
-			if (! isset($options['files'])) {
-				$options['files'] = true;
-			}
-		}
-
-		return $this->form->open($options);
-	}
-
-	public function formGroup()
-	{
-		$this->customFormGroup = 1;
-
-		return <<<EOT
-<div class="form-group">
-EOT;
-	}
-
-	public function endFormGroup()
-	{
-		$this->customFormGroup = 0;
-
-		return <<<EOT
-</div>
-EOT;
-	}
-
-	public function remoteModalRouteIcon($route, $icon)
-	{
-		$inputOpen  = $this->getIconWrapperOpen();
-		$inputClose = $this->getInputWrapperClose();
-
-		return <<<EOT
-$inputOpen
-		<a role="button" href="#remoteModal" data-toggle="modal" data-remote="$route">
-        <i class="$icon"></i>
-    </a>
+        return <<<HTML
     $inputClose
-EOT;
-
-	}
-
-	public function ajaxForm($formId, $message)
-	{
-		$this->formId = $formId;
-
-		$this->setAjaxFormRequirements($message);
-
-		return $this;
-	}
-
-	protected function addToSection($section, $data)
-	{
-		if (! array_key_exists($section . 'Form', $this->view->getSections())) {
-			$data = "@parent " . $data;
-		}
-
-		$this->view->inject($section . 'Form', $data);
-	}
-
-	protected function setAjaxFormRequirements($message)
-	{
-		$this->addToSection('js', '
-<script>
-	$(\'#' . $this->formId . '\').AjaxSubmit({
-		path:\'/' . $this->request->path() . '\',
-		successMessage:\'' . $message . '\'
-	});
-</script>
-		');
-	}
-
-	public function close()
-	{
-		return $this->form->close();
-	}
-
-	public function setUpLabel($name, $text)
-	{
-		if ($text != null) {
-			switch ($this->type) {
-				case 'basic':
-					$class = null;
-					break;
-				case 'inline':
-					$class = ' class="sr-only"';
-					break;
-				case 'horizontal':
-					$class = ' class="col-md-' . $this->labelSize . ' control-label"';
-					break;
-			}
-
-			return '<label' . $class . 'for="' . $name . '">' . $text . '</label>';
-		}
-
-		return null;
-	}
-
-	public function hidden($name, $value, $attributes = [])
-	{
-		// Set up the attributes
-		$attributes = $this->verifyAttributes('text', $attributes);
-
-		return $this->form->hidden($name, $value, $attributes);
-	}
-
-	public function date($name, $value, $attributes = [], $label = null)
-	{
-		// Set up the attributes
-		$attributes = $this->verifyAttributes('date', $attributes);
-
-		// Create the default input
-		$input = $this->form->input('date', $name, $value, $attributes);
-
-		return $this->createOutput($name, $label, $input);
-	}
-
-	public function text($name, $value, $attributes = [], $label = null)
-	{
-		// Set up the attributes
-		$attributes = $this->verifyAttributes('text', $attributes);
-
-		// Create the default input
-		$input = $this->form->text($name, $value, $attributes);
-
-		return $this->createOutput($name, $label, $input);
-	}
-
-	public function textarea($name, $value, $attributes = [], $label = null)
-	{
-		// Set up the attributes
-		$attributes = $this->verifyAttributes('textarea', $attributes);
-
-		// Create the default input
-		$input = $this->form->textarea($name, $value, $attributes);
-
-		return $this->createOutput($name, $label, $input);
-	}
-
-	public function email($name, $value, $attributes = [], $label = null)
-	{
-		// Set up the attributes
-		$attributes = $this->verifyAttributes('email', $attributes);
-
-		// Create the default input
-		$input = $this->form->email($name, $value, $attributes);
-
-		return $this->createOutput($name, $label, $input);
-	}
-
-	public function password($name, $attributes = [], $label = null)
-	{
-		// Set up the attributes
-		$attributes = $this->verifyAttributes('password', $attributes);
-
-		// Create the default input
-		$input = $this->form->password($name, $attributes);
-
-		return $this->createOutput($name, $label, $input);
-	}
-
-	protected function createCheckbox($name, $value, $checked, $attributes, $label)
-	{
-		return '
-		<div class="checkbox">
-			<label>' .
-			   $this->form->checkbox($name, $value, $checked, $attributes) . ' ' . $label
-			   . '</label>
-		</div>
-		';
-	}
-
-	public function checkbox($name, $value, $checked = false, $attributes = [], $label = null)
-	{
-		switch ($this->type) {
-			case 'horizontal':
-				return '
-					<div class="form-group">
-						<div class="col-md-offset-' . $this->labelSize . ' col-md-' . $this->inputSize . '">' .
-					   $this->createCheckbox($name, $value, $checked, $attributes, $label)
-					   . '</div>
-					</div>
-				';
-				break;
-			default:
-				return $this->createCheckbox($name, $value, $checked, $attributes, $label);
-				break;
-		}
-	}
-
-	public function select($name, $optionsArray, $selected, $attributes = [], $label = null)
-	{
-		// Set up the attributes
-		$attributes = $this->verifyAttributes('select', $attributes);
-
-		// Create the default input
-		$input = $this->form->select($name, $optionsArray, $selected, $attributes);
-
-		return $this->createOutput($name, $label, $input);
-	}
-
-	public function select2($name, $optionsArray, $selected, $attributes = [], $label = null, $placeholder = null)
-	{
-		// Set up the attributes
-		$attributes = $this->verifyAttributes('select2', $attributes);
-		$multiple   = in_array('multiple', $attributes);
-
-		// Create the default input
-		$input = $this->form->select($name, $optionsArray, $selected, $attributes);
-
-		// Add the jquery
-		$this->setSelect2Requirements($attributes['id'], $placeholder, $multiple);
-
-		return $this->createOutput($name, $label, $input);
-	}
-
-	protected function setSelect2Requirements($id, $placeholder, $multiple)
-	{
-		static $exists = false;
-
-		if (! $exists) {
-			$this->addToSection('css', $this->html->style('css/vendor/select2/select2.css'));
-			$this->addToSection('css', $this->html->style('css/vendor/select2/select2-bootstrap.css'));
-			$this->addToSection('jsInclude', $this->html->script('vendor/select2/select2.js'));
-
-			$exists = true;
-		}
-
-		if ($multiple) {
-			$script = <<<EOT
-@parent
-$('#$id').select2({placeholder: '$placeholder',allowClear: true});
-EOT;
-		} else {
-			$script = <<<EOT
-@parent
-$('#$id')
-			 .prepend('<option/>')
-			 .val(function(){return $('[selected]',this).val() ;})
-			 .select2({
-				placeholder: '$placeholder',
-				allowClear: true
-			 });
-EOT;
-		}
-
-		return $this->addToSection('onReadyJs', $script);
-	}
-
-	public function color($name, $value, $attributes = [], $label = null)
-	{
-		// Set up the attributes
-		$attributes = $this->verifyAttributes('color', $attributes);
-
-		// Set up the label
-		$label = $this->setUpLabel($name, $label);
-
-		// Create the default input
-		$input = $this->form->text($name, $value, $attributes);
-
-		$this->setColorRequirements();
-
-		$formInput = '
-		<div class="form-group">' .
-					 $label .
-					 $this->getInputWrapperOpen()
-					 . '<div class="input-group">
-					<span class="input-group-addon" id="colorPreview' . $name . '" style="background-color: ' . $value . ';">&nbsp;</span>' .
-					 $input
-					 . '</div>' .
-					 $this->getInputWrapperClose()
-					 . '</div>';
-
-		return $formInput;
-	}
-
-	public function setColorRequirements()
-	{
-		static $exists = false;
-
-		if (! $exists) {
-			$this->addToSection('css', $this->html->style('css/vendor/colorpicker/css/bootstrap-colorpicker.min.css'));
-			$this->addToSection('jsInclude', $this->html->script('js/vendor/bootstrap-colorpicker.js'));
-			$this->addToSection('onReadyJs', '
-$(\'.colorpicker\').colorpicker().on(\'changeColor\', function(ev){
-	$(\'#colorPreview\'+ $(this).attr(\'name\')).css(\'background-color\', ev.color.toHex());
-});
-			');
-
-			$exists = true;
-		}
-	}
-
-	public function image($name, $existingImage = null, $label = null)
-	{
-		// make sure we have an image
-		if ($existingImage == null) {
-			$existingImage = '/img/no_user.png';
-		}
-
-		// Set up the label
-		$label = $this->setUpLabel($name, $label);
-
-		// Create the default input
-		$input = $this->form->file($name);
-
-		$this->setImageRequirements();
-		$inputOpen  = $this->getInputWrapperOpen();
-		$inputClose = $this->getInputWrapperClose();
-
-		$formInput = <<<EOT
-<div class="form-group">
-	$label
-	$inputOpen
-		<div>
-			<div class="fileinput fileinput-new text-center" data-provides="fileinput" style="width: 200px;">
-				<div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
-					<img src="$existingImage" alt="..." />
-				</div>
-				<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
-				<div>
-					<span class="btn btn-sm btn-primary btn-block btn-file">
-						<span class="fileinput-new">Select image</span>
-						<span class="fileinput-exists">Change</span>
-						$input
-					</span>
-					<a href="javascript:void(0);" class="btn btn-sm btn-block btn-inverse fileinput-exists" data-dismiss="fileinput">Remove</a>
-				</div>
-			</div>
-		</div>
-	$inputClose
 </div>
-EOT;
+HTML;
+    }
 
-		return $formInput;
-	}
+    public function offsetGroupOpen($labelSize = null, $inputSize = null, $iconSize = null)
+    {
+        if ($labelSize != null) {
+            $this->previousSizes = [$this->labelSize, $this->inputSize, $this->iconSize];
 
-	public function setImageRequirements()
-	{
-		static $exists = false;
+            $this->setSizes($labelSize, $inputSize, $iconSize);
+        }
 
-		if (! $exists) {
-			$this->addToSection('jsInclude', $this->html->script('vendor/jasny-bootstrap/dist/js/jasny-bootstrap.min.js'));
-			$this->addToSection('css', $this->html->style('vendor/jasny-bootstrap/dist/css/jasny-bootstrap.min.css'));
+        $classes = implode(' ', $this->requiredClasses);
 
-			$exists = true;
-		}
-	}
+        if ($this->type == 'horizontal') {
+            return <<<HTML
+    <div class="form-group {$classes}">
+        <div class="col-md-offset-{$this->labelSize} col-md-{$this->inputSize}">
+HTML;
+        }
 
-	public function submit($value = null, $parameters = array('class' => 'btn btn-sm btn-primary'))
-	{
-		if (! isset($parameters['class'])) {
-			$parameters['class'] = 'btn btn-sm btn-primary';
-		}
+        return <<<HTML
+    <div class="form-group {$classes}">
+HTML;
 
-		return '<div class="form-group">' .
-			   $this->getSubmitWrapperOpen() .
-			   $this->form->submit($value, $parameters) .
-			   $this->getInputWrapperClose()
-			   . '</div>';
-	}
+    }
 
-	public function jsonSubmit($value = null, $parameters = array('class' => 'btn btn-sm btn-primary'))
-	{
-		if (! isset($parameters['id'])) {
-			$parameters['id'] = 'jsonSubmit';
-		}
-		if (! isset($parameters['class'])) {
-			$parameters['class'] = 'btn btn-sm btn-primary';
-		}
+    public function smallGroupClose()
+    {
+        if ($this->previousSizes != null) {
+            call_user_func_array([$this, 'setSizes'], $this->previousSizes);
 
-		return '<div class="form-group">' .
-			   $this->getSubmitWrapperOpen() .
-			   $this->form->submit($value, $parameters) .
-			   $this->getInputWrapperClose()
-			   . '</div>';
-	}
+            $this->previousSizes = null;
+        }
 
-	public function submitReset($submitValue = 'Submit', $resetValue = 'Reset',
-								$submitParameters = array('class' => 'btn btn-sm btn-primary'),
-								$resetParameters = array('class' => 'btn btn-sm btn-inverse'))
-	{
-		return '<div class="form-group">' .
-			   $this->getSubmitWrapperOpen()
-			   . '<div class="btn-group">' .
-			   $this->form->submit($submitValue, $submitParameters) .
-			   $this->form->reset($resetValue, $resetParameters)
-			   . '</div>' .
-			   $this->getInputWrapperClose()
-			   . '</div>';
-	}
+        $inputClose = $this->getInputWrapperClose();
 
-	/**
-	 * @param string $submitValue
-	 * @param string $cancelValue
-	 * @param array  $submitParameters
-	 * @param array  $cancelParameters
-	 *
-	 * @return string
-	 */
-	public function submitCancel($submitValue = 'Submit', $cancelValue = 'Cancel',
-								 $submitParameters = array('class' => 'btn btn-sm btn-primary'),
-								 $cancelParameters = array('class' => 'btn btn-sm btn-inverse'))
-	{
-		return '<div class="form-group">' .
-			   $this->getSubmitWrapperOpen()
-			   . '<div class="btn-group">' .
-			   $this->form->submit($submitValue, $submitParameters) .
-			   '<a href="javascript: void(0);" ' . $this->html->attributes($cancelParameters) . ' data-dismiss="modal">' . $cancelValue . '</a>'
-			   . '</div>' .
-			   $this->getInputWrapperClose()
-			   . '</div>';
-	}
+        if ($this->type == 'horizontal') {
+            return <<<HTML
+        $inputClose
+    </div>
+</div>
+HTML;
+        }
 
-	protected function getSubmitWrapperOpen()
-	{
-		switch ($this->type) {
-			case 'horizontal':
-				return '<div class="col-md-offset-' . $this->labelSize . ' col-md-' . $this->inputSize . '">';
-				break;
-		}
+        return <<<HTML
+    $inputClose
+</div>
+HTML;
+    }
 
-		return null;
-	}
+    public function label($name, $value = null, $options = [])
+    {
+        switch ($this->type) {
+            case 'inline':
+                $options = $this->verifyHasOption($options, 'class', 'sr-only');
+                break;
+            case 'horizontal':
+                $options = $this->verifyHasOption($options, 'class', 'col-md-' . $this->labelSize);
+                $options = $this->verifyHasOption($options, 'class', 'control-label');
+                break;
+        }
 
-	protected function createOutput($name, $label, $input)
-	{
-		// Set up the label
-		$label = $this->setUpLabel($name, $label);
+        return parent::label($name, $value, $options);
+    }
 
-		$formGroupOpen  = $this->customFormGroup == 0 ? '<div class="form-group">' : null;
-		$formGroupClose = $this->customFormGroup == 0 ? '</div>' : null;
-		$inputOpen      = $this->getInputWrapperOpen();
-		$inputClose     = $this->getInputWrapperClose();
+    public function hidden($name, $value = null, $options = [])
+    {
+        // Set up the attributes
+        $options = $this->verifyAttributes('text', $options);
 
-		return <<<EOT
-$formGroupOpen
+        return parent::hidden($name, $value, $options);
+    }
+
+    public function help($text, $options = [])
+    {
+        $options = $this->verifyAttributes('help', $options);
+
+        return $this->html->span($text, $options);
+    }
+
+    public function icon($class, $options = [])
+    {
+        $options = $this->verifyHasOption($options, 'class', 'form-control-feedback');
+        $options = $this->verifyHasOption($options, 'class', $class);
+
+        if (strpos($class, 'fa fa') !== false) {
+            // For font-awesome, increase the offset
+            $options = $this->verifyHasOption($options, 'style', 'top: 30px;');
+        }
+
+        $options['aria-hidden'] = 'true';
+
+        return $this->html->span(null, $options);
+    }
+
+    public function date($name, $value = null, $options = [], $label = null)
+    {
+        // Set up the attributes
+        $options = $this->verifyAttributes('date', $options);
+
+        // Create the default input
+        $input = parent::input('date', $name, $value, $options);
+
+        return $this->createOutput($name, $label, $input);
+    }
+
+    public function text($name, $value = null, $options = [], $label = null)
+    {
+        // Set up the attributes
+        $options = $this->verifyAttributes('text', $options);
+
+        // Create the default input
+        $input = parent::text($name, $value, $options);
+
+        return $this->createOutput($name, $label, $input);
+    }
+
+    public function staticInput($value = null, $options = [], $label = null)
+    {
+        // Create the default input
+        $input = '<p class="form-control-static">' . $value . '</p>';
+
+        return $this->createOutput(null, $label, $input);
+    }
+
+    public function textarea($name, $value = null, $options = [], $label = null)
+    {
+        // Set up the attributes
+        $options = $this->verifyAttributes('textarea', $options);
+
+        // Create the default input
+        $input = parent::textarea($name, $value, $options);
+
+        return $this->createOutput($name, $label, $input);
+    }
+
+    public function email($name, $value = null, $options = [], $label = null)
+    {
+        // Set up the attributes
+        $options = $this->verifyAttributes('email', $options);
+
+        // Create the default input
+        $input = parent::email($name, $value, $options);
+
+        return $this->createOutput($name, $label, $input);
+    }
+
+    public function password($name, $options = [], $label = null)
+    {
+        // Set up the attributes
+        $options = $this->verifyAttributes('password', $options);
+
+        // Create the default input
+        $input = parent::password($name, $options);
+
+        return $this->createOutput($name, $label, $input);
+    }
+
+    public function select($name, $list = [], $selected = null, $options = [], $label = null)
+    {
+        // Set up the attributes
+        $options = $this->verifyAttributes('select', $options);
+
+        // Create the default input
+        $input = parent::select($name, $list, $selected, $options);
+
+        return $this->createOutput($name, $label, $input);
+    }
+
+    protected function createOutput($name, $label, $input)
+    {
+        // Set up the label
+        $label = $label != null ? $this->label($name, $label) : null;
+
+        $inputOpen = $this->getInputWrapperOpen();
+
+        $this->requiredClasses = [];
+
+        return <<<HTML
 			$label
 			$inputOpen
 			$input
-			$inputClose
-			$formGroupClose
-EOT;
-	}
+HTML;
+    }
 
-	public function verifyAttributes($input, $attributes)
-	{
-		// Input specific attributes
-		if ($input == 'color') {
-			if (! isset($attributes['class'])) {
-				$attributes['class'] = 'colorpicker';
-			} elseif (strpos($attributes['class'], 'colorpicker') === false) {
-				$attributes['class'] = $attributes['class'] . ' colorpicker';
-			}
-		}
-		if ($input == 'select2') {
-			if (! isset($attributes['id'])) {
-				$attributes['id'] = Str::random(10);
-			}
-		}
+    protected function createSelectable($type, $name, $value, $checked, $options, $label, $inline)
+    {
+        $class = $inline ? $type . '-inline' : $type;
 
-		// All inputs
-		if (! isset($attributes['class'])) {
-			$attributes['class'] = 'form-control';
-		} elseif (strpos($attributes['class'], 'form-control') === false) {
-			$attributes['class'] = ' form-control ' . $attributes['class'];
-		}
+        return '
+		<div class="' . $class . '">
+			<label>' .
+               parent::$type($name, $value, $checked, $options) . ' ' . $label . '
+            </label>
+		</div>
+		';
+    }
 
-		return $attributes;
-	}
+    public function checkbox($name, $value = null, $checked = false, $options = [], $label = null, $inline = false)
+    {
+        $input = $this->createSelectable('checkbox', $name, $value, $checked, $options, $label, $inline);
 
-	protected function getInputWrapperOpen()
-	{
-		switch ($this->type) {
-			case 'horizontal':
-				return '<div class="col-md-' . $this->inputSize . '">';
-				break;
-		}
+        return $this->createSmallOutput($name, $label, $input);
+    }
 
-		return null;
-	}
+    public function radio($name, $value = null, $checked = false, $options = [], $label = null, $inline = false)
+    {
+        $input = $this->createSelectable('radio', $name, $value, $checked, $options, $label, $inline);
 
-	protected function getIconWrapperOpen()
-	{
-		switch ($this->type) {
-			case 'horizontal':
-				return '<div class="col-md-' . $this->iconSize . '">';
-				break;
-		}
+        return $this->createSmallOutput($name, $label, $input);
+    }
 
-		return null;
-	}
+    protected function createSmallOutput($name, $label, $input)
+    {
+        $this->requiredClasses = [];
 
-	protected function getInputWrapperClose()
-	{
-		switch ($this->type) {
-			case 'horizontal':
-				return '</div>';
-				break;
-		}
+        return <<<HTML
+			$input
+HTML;
+    }
 
-		return null;
-	}
+    public function verifyAttributes($input, $options)
+    {
+        // Input specific attributes
+        if ($input == 'color') {
+            $options = $this->verifyHasOption($options, 'class', 'colorpicker');
+        }
+        if ($input == 'select2') {
+            if (! isset($options['id'])) {
+                $options['id'] = Str::random(10);
+            }
+        }
+        if ($input == 'help') {
+            return $this->verifyHasOption($options, 'class', 'help-block');
+        }
 
-	public function getJsInclude()
-	{
-		return implode("\n", $this->jsInclude);
-	}
+        // All inputs
+        $options = $this->verifyHasOption($options, 'class', 'form-control');
 
-	public function getJs()
-	{
-		return implode("\n", $this->js);
-	}
+        if (! empty($this->requiredClasses)) {
+            foreach ($this->requiredClasses as $class) {
+                $options = $this->verifyHasOption($options, 'class', $class);
+            }
+        }
 
-	public function getOnReadyJs()
-	{
-		return implode("\n", $this->onReadyJs);
-	}
+        return $options;
+    }
 
-	public function getCss()
-	{
-		return implode("\n", $this->css);
-	}
+    protected function getInputWrapperOpen()
+    {
+        switch ($this->type) {
+            case 'horizontal':
+                return '<div class="col-md-' . $this->inputSize . '">';
+                break;
+        }
+
+        return null;
+    }
+
+    protected function getIconWrapperOpen()
+    {
+        switch ($this->type) {
+            case 'horizontal':
+                return '<div class="col-md-' . $this->iconSize . '">';
+                break;
+        }
+
+        return null;
+    }
+
+    protected function getInputWrapperClose()
+    {
+        switch ($this->type) {
+            case 'horizontal':
+                return '</div>';
+                break;
+        }
+
+        return null;
+    }
+
+    public function getJsInclude()
+    {
+        return implode("\n", $this->jsInclude);
+    }
+
+    public function getJs()
+    {
+        return implode("\n", $this->js);
+    }
+
+    public function getOnReadyJs()
+    {
+        return implode("\n", $this->onReadyJs);
+    }
+
+    public function getCss()
+    {
+        return implode("\n", $this->css);
+    }
+
+    protected function verifyHasOption($options, $key, $value)
+    {
+        if (! isset($options[$key])) {
+            $options[$key] = $value;
+        } elseif (strpos($options[$key], $value) === false) {
+            $options[$key] = $options[$key] . ' ' . $value;
+        }
+
+        return $options;
+    }
+
+    protected function addToSection($section, $data)
+    {
+        if (! array_key_exists($section . 'Form', $this->view->getSections())) {
+            $data = "@parent " . $data;
+        }
+
+        $this->view->inject($section . 'Form', $data);
+    }
+
+    public function __call($name, $arguments)
+    {
+        $name = $this->checkForSizes($name, $arguments);
+        $name = $this->checkForStates($name, $arguments);
+        $name = $this->checkForOptionals($name, $arguments);
+
+        return call_user_func_array([$this, $name], $arguments);
+    }
+
+    private function checkForSizes($name, $arguments)
+    {
+        $sizes = ['lg', 'sm', 'Lg', 'Sm'];
+
+        if ($this->strpos_array($name, $sizes) !== false) {
+            preg_match('/(' . implode('|', $sizes) . ')/', $name, $result);
+
+            $class = strtolower($result[1]);
+
+            switch ($this->type) {
+                case 'horizontal':
+                    $this->requiredClasses[] = 'form-group-' . $class;
+                    break;
+                default:
+                    $this->requiredClasses[] = 'input-' . $class;
+                    break;
+            }
+            $method = lcfirst(str_replace($sizes, '', $name));
+
+            return $method;
+        }
+
+        return $name;
+    }
+
+    private function checkForStates($name, $arguments)
+    {
+        $states = ['success', 'warning', 'error', 'Success', 'Warning', 'Error'];
+
+        if ($this->strpos_array($name, $states) !== false) {
+            preg_match('/(' . implode('|', $states) . ')/', $name, $result);
+
+            $class = strtolower($result[1]);
+
+            $this->requiredClasses[] = 'has-' . $class;
+
+            $method = lcfirst(str_replace($states, '', $name));
+
+            return $method;
+        }
+
+        return $name;
+    }
+
+    private function checkForOptionals($name, $arguments)
+    {
+        $optionals = ['feedback', 'Feedback'];
+
+        if ($this->strpos_array($name, $optionals) !== false) {
+            preg_match('/(' . implode('|', $optionals) . ')/', $name, $result);
+
+            $class = strtolower($result[1]);
+
+            $this->requiredClasses[] = 'has-' . $class;
+
+            $method = lcfirst(str_replace($optionals, '', $name));
+
+            return $method;
+        }
+
+        return $name;
+    }
+
+    private function strpos_array($haystack, $needles, $offset = 0)
+    {
+        if (is_array($needles)) {
+            foreach ($needles as $needle) {
+                $pos = $this->strpos_array($haystack, $needle);
+                if ($pos !== false) {
+                    return $pos;
+                }
+            }
+
+            return false;
+        } else {
+            return strpos($haystack, $needles, $offset);
+        }
+    }
 }

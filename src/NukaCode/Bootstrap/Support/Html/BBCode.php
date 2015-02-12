@@ -1,4 +1,4 @@
-<?php namespace NukaCode\Bootstrap\Support\Facades\Html;
+<?php namespace NukaCode\Bootstrap\Support\Html;
 
 use Illuminate\Support\Facades\Facade;
 

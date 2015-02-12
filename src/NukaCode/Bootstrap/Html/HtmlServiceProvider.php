@@ -23,8 +23,6 @@ class HtmlServiceProvider extends ServiceProvider {
 
         $this->registerFormBuilder();
 
-        $this->registerBFormBuilder();
-
 		$this->registerBBCode();
     }
 
@@ -41,31 +39,18 @@ class HtmlServiceProvider extends ServiceProvider {
         });
     }
 
-	/**
-	 * Register the form builder instance.
-	 *
-	 * @return void
-	 */
-	protected function registerFormBuilder()
-	{
-		$this->app->bindShared('form', function($app)
-		{
-			$form = new BaseForm($app['html'], $app['url'], $app['session.store']->getToken());
-
-			return $form->setSessionStore($app['session.store']);
-		});
-	}
-
     /**
      * Register the form builder instance.
      *
      * @return void
      */
-    protected function registerBFormBuilder()
+    protected function registerFormBuilder()
     {
-        $this->app->bindShared('bform', function($app)
+        $this->app->bindShared('form', function($app)
         {
-            return $app->make('NukaCode\Bootstrap\Html\FormBuilder');
+            $form = new FormBuilder($app['html'], $app['url'], $app['session.store']->getToken(), $app['view']);
+
+            return $form->setSessionStore($app['session.store']);
         });
     }
 

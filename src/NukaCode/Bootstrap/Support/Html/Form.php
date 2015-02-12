@@ -2,13 +2,13 @@
 
 use Illuminate\Support\Facades\Facade;
 
-class HTML extends Facade {
+class Form extends Facade {
 
     /**
      * Get the registered name of the component.
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'html'; }
+    protected static function getFacadeAccessor() { return 'form'; }
 
 }

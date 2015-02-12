@@ -74,9 +74,9 @@ class BootstrapServiceProvider extends BaseServiceProvider {
 	{
 		$aliases = [
 			// Facades
-			'HTML'   => 'NukaCode\Bootstrap\Support\Facades\Html\HTML',
-			'bForm'  => 'NukaCode\Bootstrap\Support\Facades\Html\bForm',
-			'BBCode' => 'NukaCode\Bootstrap\Support\Facades\Html\BBCode',
+			'HTML'   => 'NukaCode\Bootstrap\Support\Html\HTML',
+			'Form'   => 'NukaCode\Bootstrap\Support\Html\Form',
+			'BBCode' => 'NukaCode\Bootstrap\Support\Html\BBCode',
 		];
 
 		$exclude = $this->app['config']->get('nukacode.bootstrap.excludeAliases');
