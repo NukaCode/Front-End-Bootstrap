@@ -1,10 +1,14 @@
 Installation
 ====================================
 
+Laravel-Base
+------------------------------------
+If you are adding bootstrap to Laravel-Base, you will need to make some minor changes.
+
+- Remove ``resources/views/layouts/default.blade.php`` (Optional but this package contains a more in depth layout)
+
 Composer
 ------------------------------------
-You will need primarily only Laravel to run core.
-
 .. code::
 
     composer require nukacode/front-end-bootstrap:~1.0
@@ -15,7 +19,7 @@ If you would like to use the included routes, add the following to your ``app/Ht
 
 .. code::
 
-    include_once(base_path() .'/vendor/nukacode/bootstrap/src/routes.php');
+    include_once(base_path() .'/vendor/nukacode/front-end-bootstrap/src/routes.php');
 
 Service Providers
 ------------------------------------
@@ -24,6 +28,7 @@ Add the following service providers to ``configs/app.php``.
 
      'NukaCode\Bootstrap\BootstrapServiceProvider',
      'NukaCode\Bootstrap\Html\HtmlServiceProvider',
+
 Themes
 ------------------------------------
 Bower
