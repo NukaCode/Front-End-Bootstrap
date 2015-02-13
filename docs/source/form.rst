@@ -374,4 +374,3 @@ $type        No                  The type to set the form to.  (basic, inline or
 To-Do
 -------
 - input groups
-- submits

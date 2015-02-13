@@ -19,13 +19,7 @@
   },
   "require-dev": {
     "phpspec/phpspec": "~2.1",
-    "henrikbjorn/phpspec-code-coverage": "~0.2",
-    "behat/behat": "~3.0@dev",
-    "behat/mink": "~1.6@dev",
-    "behat/mink-extension": "~2.0@dev",
-    "laracasts/behat-laravel-extension": "dev-master",
-    "behat/mink-selenium2-driver": "~1.2@dev",
-    "behat/mink-goutte-driver": "~1.1@dev"
+    "henrikbjorn/phpspec-code-coverage": "~0.2"
   },
   "autoload": {
     "classmap": [

@@ -199,7 +199,7 @@ HTML;
         $options = $this->verifyAttributes('date', $options);
 
         // Create the default input
-        $input = parent::input('date', $name, $value, $options);
+        $input = $this->input('date', $name, $value, $options);
 
         return $this->createOutput($name, $label, $input);
     }
