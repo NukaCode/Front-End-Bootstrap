@@ -6,6 +6,7 @@ Laravel-Base
 If you are adding bootstrap to Laravel-Base, you will need to make some minor changes.
 
 - Remove ``resources/views/layouts/default.blade.php`` (Optional but this package contains a more in depth layout)
+- Remove ``Illuminate\Html\HtmlServiceProvider`` from ``config/app.php``.
 
 Composer
 ------------------------------------
