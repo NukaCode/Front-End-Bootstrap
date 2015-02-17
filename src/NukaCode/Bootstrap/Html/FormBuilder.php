@@ -124,7 +124,7 @@ HTML;
 
     }
 
-    public function smallGroupClose()
+    public function offsetGroupClose()
     {
         if ($this->previousSizes != null) {
             call_user_func_array([$this, 'setSizes'], $this->previousSizes);
