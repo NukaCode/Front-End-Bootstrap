@@ -1,19 +1,22 @@
 <!doctype html>
 <html>
-<head>
-	@include('layouts.partials.header')
-</head>
-<body>
-	@include('layouts.partials.menu')
-	@if (isset($content))
-		{{ $content }}
-	@else
-		@yield('content')
-	@endif
+    <head>
+        @include('layouts.partials.header')
+    </head>
+    <body>
+        @include('layouts.partials.menu')
 
-	@include('layouts.partials.modals')
+        <div id="content">
+            @if (isset($content))
+                {{ $content }}
+            @else
+                @yield('content')
+            @endif
+        </div>
 
-	@include('layouts.partials.javascript')
+        @include('layouts.partials.modals')
 
-</body>
+        @include('layouts.partials.javascript')
+
+    </body>
 </html>
