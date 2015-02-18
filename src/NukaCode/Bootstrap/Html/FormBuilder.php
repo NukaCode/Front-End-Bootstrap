@@ -124,7 +124,7 @@ HTML;
 
     }
 
-    public function smallGroupClose()
+    public function offsetGroupClose()
     {
         if ($this->previousSizes != null) {
             call_user_func_array([$this, 'setSizes'], $this->previousSizes);
@@ -138,7 +138,6 @@ HTML;
             return <<<HTML
         $inputClose
     </div>
-</div>
 HTML;
         }
 
@@ -494,6 +493,7 @@ HTML;
     private function strpos_array($haystack, $needles, $offset = 0)
     {
         if (is_array($needles)) {
+            pp($needles);
             foreach ($needles as $needle) {
                 $pos = $this->strpos_array($haystack, $needle);
                 if ($pos !== false) {
