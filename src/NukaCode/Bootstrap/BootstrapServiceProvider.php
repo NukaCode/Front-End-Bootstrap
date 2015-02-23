@@ -104,5 +104,4 @@ class BootstrapServiceProvider extends BaseServiceProvider {
     {
         return ['bootstrap'];
     }
-
 }
