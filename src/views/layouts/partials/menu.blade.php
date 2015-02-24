@@ -2,5 +2,4 @@
     <div id="header">
         @include('layouts.menus.'. Config::get('nukacode-frontend.menu'))
     </div>
-    <hr />
 @endif
