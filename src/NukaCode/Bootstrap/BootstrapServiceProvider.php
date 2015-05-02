@@ -13,7 +13,7 @@ class BootstrapServiceProvider extends BaseServiceProvider {
 
     const NAME = 'bootstrap';
 
-    const VERSION = '1.0.4';
+    const VERSION = '1.0.6';
 
     const DOCS = 'front-end-bootstrap';
 
