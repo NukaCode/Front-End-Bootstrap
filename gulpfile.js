@@ -12,7 +12,7 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function (mix) {
-    mix..publish(
+    mix.publish(
         'jquery/dist/jquery.min.js',
         'public/js/vendor/jquery.js'
     )
