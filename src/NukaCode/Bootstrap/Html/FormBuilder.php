@@ -1,10 +1,9 @@
 <?php namespace NukaCode\Bootstrap\Html;
 
-use Illuminate\Routing\UrlGenerator;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Html\FormBuilder as BaseFormBuilder;
+use NukaCode\Html\FormBuilder as BaseFormBuilder;
 
-class FormBuilder extends BaseFormBuilder {
+class FormBuilder extends BaseFormBuilder
+{
 
     public    $labelSize       = 2;
 
@@ -25,14 +24,6 @@ class FormBuilder extends BaseFormBuilder {
     protected $requiredClasses = [];
 
     private   $view;
-
-    public function __construct(HtmlBuilder $html, UrlGenerator $url, $csrfToken, Factory $view)
-    {
-        $this->url       = $url;
-        $this->html      = $html;
-        $this->csrfToken = $csrfToken;
-        $this->view      = $view;
-    }
 
     public function open(array $options = [], $type = 'horizontal')
     {
@@ -359,7 +350,8 @@ HTML;
 $(\'.colorpicker\').colorpicker().on(\'changeColor\', function(ev){
 	$(\'#colorPreview\'+ $(this).attr(\'name\')).css(\'background-color\', ev.color.toHex());
 });
-			');
+			'
+            );
             $exists = true;
         }
     }
@@ -445,46 +437,6 @@ HTML;
         }
 
         return null;
-    }
-
-    public function getJsInclude()
-    {
-        return implode("\n", $this->jsInclude);
-    }
-
-    public function getJs()
-    {
-        return implode("\n", $this->js);
-    }
-
-    public function getOnReadyJs()
-    {
-        return implode("\n", $this->onReadyJs);
-    }
-
-    public function getCss()
-    {
-        return implode("\n", $this->css);
-    }
-
-    protected function verifyHasOption($options, $key, $value)
-    {
-        if (! isset($options[$key])) {
-            $options[$key] = $value;
-        } elseif (strpos($options[$key], $value) === false) {
-            $options[$key] = $options[$key] . ' ' . $value;
-        }
-
-        return $options;
-    }
-
-    protected function addToSection($section, $data)
-    {
-        if (! array_key_exists($section . 'Form', $this->view->getSections())) {
-            $data = "@parent " . $data;
-        }
-
-        $this->view->inject($section . 'Form', $data);
     }
 
     public function __call($name, $arguments)

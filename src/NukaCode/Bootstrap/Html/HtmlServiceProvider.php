@@ -1,9 +1,9 @@
 <?php namespace NukaCode\Bootstrap\Html;
 
-use Illuminate\Html\FormBuilder as BaseForm;
-use Illuminate\Support\ServiceProvider;
+use NukaCode\Html\HtmlServiceProvider as BaseHtmlServiceProvider;
 
-class HtmlServiceProvider extends ServiceProvider {
+class HtmlServiceProvider extends BaseHtmlServiceProvider
+{
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -33,7 +33,7 @@ class HtmlServiceProvider extends ServiceProvider {
      */
     protected function registerHtmlBuilder()
     {
-        $this->app->bindShared('html', function($app)
+        $this->app->bindShared('bootstrap-html', function($app)
         {
             return $app->make('NukaCode\Bootstrap\Html\HtmlBuilder');
         });
@@ -46,25 +46,12 @@ class HtmlServiceProvider extends ServiceProvider {
      */
     protected function registerFormBuilder()
     {
-        $this->app->bindShared('form', function($app)
+        $this->app->bindShared('bootstrap-form', function($app)
         {
-            $form = new FormBuilder($app['html'], $app['url'], $app['session.store']->getToken(), $app['view']);
+            $form = new FormBuilder($app['bootstrap-html'], $app['url'], $app['session.store']->getToken(), $app['view']);
 
             return $form->setSessionStore($app['session.store']);
         });
     }
-
-	/**
-	 * Register the BBCode instance.
-	 *
-	 * @return void
-	 */
-	protected function registerBBCode()
-	{
-		$this->app->bindShared('bbcode', function($app)
-		{
-			return $app->make('NukaCode\Core\Html\BBCode');
-		});
-	}
 
 }
