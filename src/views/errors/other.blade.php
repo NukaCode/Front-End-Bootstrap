@@ -6,10 +6,10 @@
 			</div>
 			Please go back and try again. <br />
 			@if (Session::has('errorMessage'))
-				Error Message: {{ Session::get('errorMessage') }}
+				Error Message: {!! Session::get('errorMessage') !!}
             @elseif (isset($message) && $message != null)
                 <br />
-                Error Message: {{ $message }}
+                Error Message: {!! $message !!}
 			@endif
 		</div>
 	</div>

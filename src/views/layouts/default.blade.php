@@ -8,7 +8,7 @@
 
         <div id="content">
             @if (isset($content))
-                {{ $content }}
+                {!! $content !!}
             @else
                 @yield('content')
             @endif

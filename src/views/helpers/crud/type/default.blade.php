@@ -2,7 +2,7 @@
 	<div class="col-md-12" id="listPanel">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				{{ $settings->title }}
+				{!! $settings->title !!}
 				<div class="panel-btn">
 					<a href="javascript: void(0);" onClick="addPanel()"><i class="fa fa-plus-circle"></i></a>
 				</div>
@@ -15,7 +15,7 @@
 							$width = (90 / count((array)$settings->displayFields)) .'%';
 						?>
 						@foreach ($settings->displayFields as $key => $details)
-							<th class="text-left" style="width: {{ $width }}">{{ ucwords(str_replace('_', ' ', $key)) }}</th>
+							<th class="text-left" style="width: {!! $width !!}">{!! ucwords(str_replace('_', ' ', $key)) !!}</th>
 						@endforeach
 						<th class="text-center" style="width: 10%;">Actions</th>
 					</tr>
@@ -23,37 +23,37 @@
 				<tbody>
 					@if (count($settings->resources) > 0)
 						@foreach ($settings->resources as $resource)
-							<tr data-sort="{{ $resource->{$settings->sortProperty} }}">
+							<tr data-sort="{!! $resource->{$settings->sortProperty} !!}">
 								<td style="display: none;">
 									<input type="hidden"
-										id="{{ $resource->id }}"
+										id="{!! $resource->id !!}"
 										@foreach ($settings->formFields as $key => $details)
-											data-{{ $key }}="{{ $resource->{$key} }}"
+											data-{!! $key !!}="{!! $resource->{$key} !!}"
 										@endforeach
 									 />
 								</td>
 								@foreach ($settings->displayFields as $key => $details)
 									@if (isset($details->linkLocation) && $details->linkLocation != null)
 										@if ($details->linkLocation == 'mailto')
-											<td>{{ HTML::mailto($resource->email, HTML::email($resource->email)) }}</td>
+											<td>{!! HTML::mailto($resource->email, HTML::email($resource->email)) !!}</td>
 										@else
 											<td>
-												{{ HTML::link($details->linkLocation . (isset($details->linkProperty) ? $resource->{$details->linkProperty} : null), ucwords($resource->{$key}))}}
+												{!! HTML::link($details->linkLocation . (isset($details->linkProperty) ? $resource->{$details->linkProperty} : null), ucwords($resource->{$key}))!!}
 											</td>
 										@endif
 									@else
-										<td>{{ ucwords($resource->{$key}) }}</td>
+										<td>{!! ucwords($resource->{$key}) !!}</td>
 									@endif
 								@endforeach
 								<td class="text-center">
 									<div class="btn-group">
 										@if (is_int($resource->id))
-											<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="editDetails({{ $resource->id }});">Edit</a>
+											<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="editDetails({!! $resource->id !!});">Edit</a>
 										@else
-											<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="editDetails('{{ $resource->id }}');">Edit</a>
+											<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="editDetails('{!! $resource->id !!}');">Edit</a>
 										@endif
 										@if (!isset($settings->deleteFlag) || $settings->deleteFlag == true)
-											{{ HTML::link($settings->deleteLink . $resource->{$settings->deleteProperty}, 'Delete', array('class' => 'confirm-remove btn btn-xs btn-danger')) }}
+											{!! HTML::link($settings->deleteLink . $resource->{$settings->deleteProperty}, 'Delete', array('class' => 'confirm-remove btn btn-xs btn-danger')) !!}
 										@endif
 									</div>
 								</td>
@@ -61,14 +61,14 @@
 						@endforeach
 					@else
 						<tr id="placeholder">
-							<td colspan="30">No {{ strtolower($settings->title) }} have been added.</td>
+							<td colspan="30">No {!! strtolower($settings->title) !!} have been added.</td>
 						</tr>
 					@endif
 				</tbody>
 			</table>
 			@if($settings->paginationFlag == true)
 				<div class="text-center">
-					{{ $settings->resources->links() }}
+					{!! $settings->resources->links() !!}
 				</div>
 			@endif
 		</div>
@@ -91,12 +91,12 @@
 
 @section('js')
 	<script>
-		var settings = {{ json_encode($settings) }};
-		var rootPath = '{{ Request::root() }}';
+		var settings = {!! json_encode($settings) !!};
+		var rootPath = '{!! Request::root() !!}';
 
 		$('#submitForm').AjaxSubmit(
 			{
-				path: '/{{ Request::path() }}',
+				path: '/{!! Request::path() !!}',
 				successMessage: 'Entry successfully updated.'
 			},
 			function(data) {

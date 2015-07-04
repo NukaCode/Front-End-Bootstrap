@@ -3,11 +3,11 @@
         <div class="panel-title">Change/Set your theme</div>
     </div>
     <div class="panel-body">
-        {{ bForm::open(false) }}
-            {{ bForm::select('theme', $availableThemes, $currentTheme, ['id' => 'theme'], 'Select a theme') }}
-            {{ bForm::select('version', [], [], ['id' => 'version'], 'Select a version') }}
-            {{ bForm::submit('Update Theme') }}
-        {{ bForm::close() }}
+        {!! bForm::open(false) !!}
+            {!! bForm::select('theme', $availableThemes, $currentTheme, ['id' => 'theme'], 'Select a theme') !!}
+            {!! bForm::select('version', [], [], ['id' => 'version'], 'Select a version') !!}
+            {!! bForm::submit('Update Theme') !!}
+        {!! bForm::close() !!}
     </div>
 </div>
 <div id="results"></div>

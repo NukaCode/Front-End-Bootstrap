@@ -13,7 +13,7 @@
 								$badgeClass = '';
 							}
 						?>
-						<li data-target="#step{{ $step }}"{{ $class }}><span class="badge{{ $badgeClass }}">{{ $step }}</span>{{ $text }}<span class="chevron"></span></li>
+						<li data-target="#step{!! $step !!}"{!! $class !!}><span class="badge{!! $badgeClass !!}">{!! $step !!}</span>{!! $text !!}<span class="chevron"></span></li>
 					@endforeach
 				</ul>
 				<div class="actions">
@@ -22,7 +22,7 @@
 				</div>
 			</div>
 		<div class="step-content well">
-			{{ bForm::open(true, array('id' => 'submitForm')) }}
+			{!! bForm::open(true, array('id' => 'submitForm')) !!}
 				@foreach ($settings->steps as $step => $text)
 					<?php
 						$step = $step + 1;
@@ -32,13 +32,13 @@
 							$class = '';
 						}
 					?>
-					<div class="step-pane{{ $class }}" id="step{{ $step }}">
+					<div class="step-pane{!! $class !!}" id="step{!! $step !!}">
 						@include($settings->viewLocation .'.step'. $step)
 					</div>
 				@endforeach
 				<input type="button" class="btn btn-xs btn-primary" id="btnWizardPrev" value="Prev">
 				<input type="button" class="btn btn-xs btn-primary" id="btnWizardNext" value="Next">
-			{{ bForm::close() }}
+			{!! bForm::close() !!}
 		</div>
 	</div>
 </div>
@@ -55,7 +55,7 @@
 	</div>
 </div>
 @section('jsInclude')
-	{{ HTML::script('/vendor/fuelux/dist/loader.min.js') }}
+	{!! HTML::script('/vendor/fuelux/dist/loader.min.js') !!}
 @stop
 @section('js')
 	<script>

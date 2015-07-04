@@ -36,14 +36,14 @@
                 <tbody>
                     <tr>
                         <td>Theme</td>
-                        <td>{{ $currentTheme }} | {{ $themeVersion }}</td>
+                        <td>{!! $currentTheme !!} | {!! $themeVersion !!}</td>
                     </tr>
                     @foreach ($colors as $name => $color)
                         <tr>
-                            <td>Color: {{ Str::title($name) }}</td>
+                            <td>Color: {!! Str::title($name) !!}</td>
                             <td>
-                                <i class="fa fa-square" style="color: {{ $color }};"></i>
-                                {{ $color }}
+                                <i class="fa fa-square" style="color: {!! $color !!};"></i>
+                                {!! $color !!}
                             </td>
                         </tr>
                     @endforeach
@@ -51,7 +51,7 @@
             </table>
             <div class="panel-footer text-right">
                 <div class="btn-group">
-                    {{ HTML::linkRoute('admin.style.theme.colors', 'Edit Colors', [], ['class' => 'btn btn-xs btn-primary']) }}
+                    {!! HTML::linkRoute('admin.style.theme.colors', 'Edit Colors', [], ['class' => 'btn btn-xs btn-primary']) !!}
                 </div>
             </div>
         </div>
@@ -63,8 +63,8 @@
                 <tbody>
                     <tr>
                         <td>Laravel</td>
-                        <td style="width: 20%;">{{ $laravelVersion }}</td>
-                        <td style="width: 20%;" class="text-right">{{ HTML::link('http://packagist.org/packages/laravel/framework#'. $laravelVersion, 'View', ['target' => '_blank']) }}</td>
+                        <td style="width: 20%;">{!! $laravelVersion !!}</td>
+                        <td style="width: 20%;" class="text-right">{!! HTML::link('http://packagist.org/packages/laravel/framework#'. $laravelVersion, 'View', ['target' => '_blank']) !!}</td>
                     </tr>
                 </tbody>
             </table>
@@ -75,12 +75,12 @@
                 <tbody>
                     @foreach ($packages as $package => $details)
                         <tr>
-                            <td>{{ Str::title($package) }}</td>
-                            <td style="width: 20%;">{{ $details['version'] }}</td>
+                            <td>{!! Str::title($package) !!}</td>
+                            <td style="width: 20%;">{!! $details['version'] !!}</td>
                             <td style="width: 20%;" class="text-right">
-                                {{ HTML::link('http://packagist.org/packages/nukacode/'. $package .'#'. $details['version'], 'View', ['target' => '_blank']) }}
+                                {!! HTML::link('http://packagist.org/packages/nukacode/'. $package .'#'. $details['version'], 'View', ['target' => '_blank']) !!}
                                 &nbsp;|&nbsp;
-                                {{ HTML::link('http://'. $details['docs'] .'.rtfd.org', 'Docs', ['target' => '_blank']) }}
+                                {!! HTML::link('http://'. $details['docs'] .'.rtfd.org', 'Docs', ['target' => '_blank']) !!}
                             </td>
                         </tr>
                     @endforeach

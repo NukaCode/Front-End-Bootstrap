@@ -6,14 +6,14 @@
 		@foreach ($settings->panels as $title => $details)
 			<div class="panel panel-default">
 				@if ($details->preference == null)
-					<div class="panel-heading">{{ $title }}</div>
+					<div class="panel-heading">{!! $title !!}</div>
 					<ul class="list-group">
 				@else
-					<div class="panel-heading" onClick="collapse('{{ $details->preference }}');">{{ $title }}</div>
-					<ul class="list-group" id="{{ $details->preference }}" style="{{ !Session::get('COLLAPSE_'. $details->preference) ? 'display: none;' : null }}">
+					<div class="panel-heading" onClick="collapse('{!! $details->preference !!}');">{!! $title !!}</div>
+					<ul class="list-group" id="{!! $details->preference !!}" style="{!! !Session::get('COLLAPSE_'. $details->preference) ? 'display: none;' : null !!}">
 				@endif
 					@foreach ($details->items as $key => $item)
-						<li class="list-group-item"><a href="javascript: void(0);" class="ajaxLink" id="{{ $key }}">{{ ucwords($item) }}</a></li>
+						<li class="list-group-item"><a href="javascript: void(0);" class="ajaxLink" id="{!! $key !!}">{!! ucwords($item) !!}</a></li>
 					@endforeach
 				</ul>
 			</div>
@@ -28,7 +28,7 @@
 
 <script>
 	@section('onReadyJs')
-		$.AjaxLeftTabs('{{ $settings->ajax->link }}', '{{ $settings->ajax->initial }}');
+		$.AjaxLeftTabs('{!! $settings->ajax->link !!}', '{!! $settings->ajax->initial !!}');
 	@endsection
 </script>
 

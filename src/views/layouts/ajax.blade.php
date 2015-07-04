@@ -4,7 +4,7 @@
 @show
 
 @if (isset($content))
-	{{ $content }}
+	{!! $content !!}
 @endif
 
 <!-- JS Include -->

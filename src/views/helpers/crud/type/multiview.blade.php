@@ -2,14 +2,14 @@
 	<div class="col-md-12" id="listPanel">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				{{ $settings->title }}
+				{!! $settings->title !!}
 			</div>
 			<table class="table table-hover table-striped table-condensed" id="dataTable">
 				<thead>
 					<tr>
 						<th style="display: none;"></th>
-						<th class="text-left" style="width: 45%">{{ $settings->multiView->rootColumn->title }}</th>
-						<th class="text-left" style="width: 45%">{{ $settings->multiView->multiColumn->title }}</th>
+						<th class="text-left" style="width: 45%">{!! $settings->multiView->rootColumn->title !!}</th>
+						<th class="text-left" style="width: 45%">{!! $settings->multiView->multiColumn->title !!}</th>
 						<th class="text-center" style="width: 10%;">Actions</th>
 					</tr>
 				</thead>
@@ -17,23 +17,23 @@
 					@foreach ($settings->multiView->rootColumn->collection as $collection)
 						<tr>
 							<td style="display: none;">
-								<input type="hidden" id="{{ $collection->id }}" data-multi="{{{ json_encode($collection->{$settings->multiView->multiColumn->property}->id->toArray()) }}}" />
+								<input type="hidden" id="{!! $collection->id !!}" data-multi="{!!{ json_encode($collection->{$settings->multiView->multiColumn->property}->id->toArray()) !!}}" />
 							</td>
-							<td>{{ $collection->{$settings->multiView->rootColumn->name} }}</td>
+							<td>{!! $collection->{$settings->multiView->rootColumn->name} !!}</td>
 							<td>
 								@foreach ($collection->{$settings->multiView->multiColumn->property} as $property)
-									{{ $property->{$settings->multiView->multiColumn->name} }}<br />
+									{!! $property->{$settings->multiView->multiColumn->name} !!}<br />
 								@endforeach
 							</td>
 							<td class="text-center">
 								<div class="btn-group">
 									@if (is_int($collection->id))
-										<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="editDetails({{ $collection->id }});">Edit</a>
+										<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="editDetails({!! $collection->id !!});">Edit</a>
 									@else
-										<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="editDetails('{{ $collection->id }}');">Edit</a>
+										<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="editDetails('{!! $collection->id !!}');">Edit</a>
 									@endif
 									@if (!isset($settings->deleteFlag) || $settings->deleteFlag == true)
-										{{ HTML::link($settings->deleteLink . $collection->{$settings->deleteProperty}, 'Delete', array('class' => 'confirm-remove btn btn-xs btn-danger')) }}
+										{!! HTML::link($settings->deleteLink . $collection->{$settings->deleteProperty}, 'Delete', array('class' => 'confirm-remove btn btn-xs btn-danger')) !!}
 									@endif
 								</div>
 							</td>
@@ -43,7 +43,7 @@
 			</table>
 			@if($settings->paginationFlag == true)
 				<div class="text-center">
-					{{ $settings->multiView->rootColumn->collection->links() }}
+					{!! $settings->multiView->rootColumn->collection->links() !!}
 				</div>
 			@endif
 		</div>
@@ -66,12 +66,12 @@
 
 @section('js')
 	<script>
-		var settings = {{ json_encode($settings) }};
-		var rootPath = '{{ Request::root() }}';
+		var settings = {!! json_encode($settings) !!};
+		var rootPath = '{!! Request::root() !!}';
 
 		$('#submitForm').AjaxSubmit(
 			{
-				path: '/{{ Request::path() }}',
+				path: '/{!! Request::path() !!}',
 				successMessage: 'Entry successfully updated.'
 			},
 			function(data) {

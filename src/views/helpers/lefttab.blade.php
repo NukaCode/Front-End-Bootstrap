@@ -7,17 +7,17 @@
 		@foreach ($settings->panels as $panel)
 			<div class="panel panel-default">
 				@if ($settings->collapsible == false)
-					<div class="panel-heading">{{ $panel->title }}</div>
+					<div class="panel-heading">{!! $panel->title !!}</div>
 					<ul class="list-group">
 				@else
-					<div class="panel-heading" onClick="collapse('{{ $panel->id }}');">{{ $panel->title }}</div>
-					<ul class="list-group" id="{{ $panel->id }}" style="{{ !Session::get('COLLAPSE_'. $panel->id) ? 'display: none;' : null }}">
+					<div class="panel-heading" onClick="collapse('{!! $panel->id !!}');">{!! $panel->title !!}</div>
+					<ul class="list-group" id="{!! $panel->id !!}" style="{!! !Session::get('COLLAPSE_'. $panel->id) ? 'display: none;' : null !!}">
 				@endif
                 @foreach ($panel->tabs as $tab)
-                    <a href="javascript: void(0);" class="list-group-item ajaxLink" id="{{ $tab->id }}" data-location="{{ $tab->path }}">
-                        {{ ucwords($tab->title) }}
+                    <a href="javascript: void(0);" class="list-group-item ajaxLink" id="{!! $tab->id !!}" data-location="{!! $tab->path !!}">
+                        {!! ucwords($tab->title) !!}
                         @if (isset($tab->options['badge']))
-                            <span class="badge">{{ $tab->options['badge'] }}</span>
+                            <span class="badge">{!! $tab->options['badge'] !!}</span>
                         @endif
                     </a>
                 @endforeach
@@ -27,7 +27,7 @@
 	</div>
 	<div class="col-md-10">
 		<div id="ajaxContent">
-			{{ $settings->loadingIcon }}
+			{!! $settings->loadingIcon !!}
 		</div>
 	</div>
 </div>
@@ -39,12 +39,12 @@
 
 		if (parts[1] != null) {
 			$('#'+ parts[1]).addClass('active');
-			$('#ajaxContent').html('{{ $settings->loadingIcon }}');
+			$('#ajaxContent').html('{!! $settings->loadingIcon !!}');
 			$('#ajaxContent').load($('#'+ parts[1]).attr('data-location'));
 		} else {
-			$('#{{ $settings->defaultTab }}').addClass('active');
-			$('#ajaxContent').html('{{ $settings->loadingIcon }}');
-			$('#ajaxContent').load($('#{{ $settings->defaultTab }}').attr('data-location'));
+			$('#{!! $settings->defaultTab !!}').addClass('active');
+			$('#ajaxContent').html('{!! $settings->loadingIcon !!}');
+			$('#ajaxContent').load($('#{!! $settings->defaultTab !!}').attr('data-location'));
 		}
 		$('.ajaxLink').click(function() {
 
@@ -52,7 +52,7 @@
 			$(this).addClass('active');
 
 			var link = $(this).attr('id');
-			$('#ajaxContent').html('{{ $settings->loadingIcon }}');
+			$('#ajaxContent').html('{!! $settings->loadingIcon !!}');
 			$('#ajaxContent').load($(this).attr('data-location'));
 			$("html, body").animate({ scrollTop: 0 }, "slow");
 		});

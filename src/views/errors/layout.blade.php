@@ -45,11 +45,11 @@
 
 <div class="container">
     <div class="content">
-        <div class="title">Error {{ $error }}</div>
-        <div class="sub-title">{{ $subTitle }}</div>
+        <div class="title">Error {!! $error !!}</div>
+        <div class="sub-title">{!! $subTitle !!}</div>
         <div class="quote">
             @if (Session::has('errorMessage'))
-                Error Message: {{ Session::get('errorMessage') }}
+                Error Message: {!! Session::get('errorMessage') !!}
                 <br />
             @endif
         </div>
